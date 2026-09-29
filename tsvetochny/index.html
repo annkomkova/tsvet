@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Цветочный — скоро открытие</title>
+  <meta name="description" content="Цветочный — учебный проект о цветах, флористике и уходе за растениями. Скоро открытие.">
+  <meta name="theme-color" content="#f7f1e8">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page page--loading">
+  <div class="loader">
+    <div class="loader__flower">
+      <svg class="flower flower--spin" viewBox="0 0 200 200">
+        <g class="flower__petals">
+          <ellipse cx="100" cy="52" rx="22" ry="46"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(45 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(90 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(135 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(180 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(225 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(270 100 100)"/>
+          <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(315 100 100)"/>
+        </g>
+        <circle class="flower__center" cx="100" cy="100" r="20"/>
+      </svg>
+    </div>
+    <p class="loader__counter"><span class="loader__value">0</span>%</p>
+    <p class="loader__caption">распускаемся…</p>
+  </div>
+  <div class="cursor">
+    <span class="cursor__circle"></span>
+    <span class="cursor__label"></span>
+  </div>
+  <header class="header">
+    <div class="header__inner">
+      <a class="logo header__logo" href="#top">
+        <svg class="logo__icon" viewBox="0 0 200 200">
+          <g>
+            <ellipse cx="100" cy="52" rx="24" ry="46"/>
+            <ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(72 100 100)"/>
+            <ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(144 100 100)"/>
+            <ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(216 100 100)"/>
+            <ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(288 100 100)"/>
+          </g>
+        </svg>
+        <span class="logo__text">цветочный</span>
+      </a>
+      <nav class="nav header__nav">
+        <a class="nav__link" href="#about"><span class="nav__text">О проекте</span></a>
+        <a class="nav__link" href="#articles"><span class="nav__text">Статьи</span></a>
+        <a class="nav__link" href="#contact"><span class="nav__text">На связи</span></a>
+      </nav>
+      <a class="button button--small header__button magnetic" href="#contact">
+        <span class="button__text">Подписаться</span>
+      </a>
+      <button class="burger header__burger" type="button">
+        <span class="burger__line"></span>
+        <span class="burger__line"></span>
+      </button>
+    </div>
+  </header>
+  <div class="menu">
+    <nav class="menu__nav">
+      <a class="menu__link" href="#about"><span class="menu__index">01</span>О проекте</a>
+      <a class="menu__link" href="#articles"><span class="menu__index">02</span>Статьи</a>
+      <a class="menu__link" href="#contact"><span class="menu__index">03</span>На связи</a>
+    </nav>
+    <p class="menu__footer">учебный проект · 2026</p>
+  </div>
+
+  <main class="main" id="top">
+    <section class="hero theme theme--light">
+      <div class="hero__decor">
+        <svg class="hero__blob fade" viewBox="0 0 200 200">
+          <path d="M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z">
+            <animate attributeName="d" dur="9s" repeatCount="indefinite"
+              values="M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z;
+                      M110,15 C150,35 195,60 175,105 C160,150 140,190 95,175 C50,165 15,140 25,95 C35,50 70,5 110,15 Z;
+                      M100,30 C160,10 190,70 170,110 C150,160 120,185 90,170 C40,160 10,130 30,90 C45,50 60,40 100,30 Z;
+                      M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z"/>
+          </path>
+        </svg>
+        <svg class="flower hero__flower hero__flower--big fade" viewBox="0 0 200 200">
+          <g class="flower__petals">
+            <ellipse cx="100" cy="52" rx="22" ry="46"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(45 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(90 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(135 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(180 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(225 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(270 100 100)"/>
+            <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(315 100 100)"/>
+          </g>
+          <circle class="flower__center" cx="100" cy="100" r="20"/>
+        </svg>
+        <svg class="flower flower--lilac hero__flower hero__flower--small fade" viewBox="0 0 200 200">
+          <g class="flower__petals">
+            <ellipse cx="100" cy="52" rx="26" ry="46"/>
+            <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(72 100 100)"/>
+            <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(144 100 100)"/>
+            <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(216 100 100)"/>
+            <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(288 100 100)"/>
+          </g>
+          <circle class="flower__center" cx="100" cy="100" r="18"/>
+        </svg>
+      </div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow split split--words">учебный проект · сезон 2026</p>
+
+        <h1 class="hero__title">
+          <span class="hero__line split split--chars split--hover">Цветоч</span>
+          <span class="hero__line hero__line--shift">
+            <span class="split split--chars split--hover split--delay">ный</span>
+            <span class="hero__asterisk fade">✿</span>
+          </span>
+        </h1>
+
+        <div class="hero__bottom">
+          <p class="hero__text split split--words split--delay">
+            Журнал о&nbsp;цветах, букетах и&nbsp;тех, кто их&nbsp;выращивает. Мы&nbsp;ещё поливаем
+            первые ростки&nbsp;— скоро здесь всё расцветёт.
+          </p>
+
+          <a class="badge hero__badge" href="#contact">
+            <svg class="badge__ring" viewBox="0 0 200 200">
+              <defs>
+                <path id="badge-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/>
+              </defs>
+              <text class="badge__text">
+                <textPath href="#badge-circle">скоро открытие ✿ скоро открытие ✿ скоро открытие ✿</textPath>
+              </text>
+            </svg>
+            <span class="badge__center">✿</span>
+          </a>
+
+          <a class="scroll-hint hero__scroll" href="#about">
+            <span class="scroll-hint__text">листайте</span>
+            <span class="scroll-hint__line"></span>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section class="marquee">
+      <div class="marquee__row">
+        <div class="marquee__track">
+          <span class="marquee__item">флористика</span><span class="marquee__star">✿</span>
+          <span class="marquee__item marquee__item--accent">сезонные букеты</span><span class="marquee__star">✿</span>
+          <span class="marquee__item">уход за растениями</span><span class="marquee__star">✿</span>
+          <span class="marquee__item marquee__item--accent">язык цветов</span><span class="marquee__star">✿</span>
+        </div>
+        <div class="marquee__track">
+          <span class="marquee__item">флористика</span><span class="marquee__star">✿</span>
+          <span class="marquee__item marquee__item--accent">сезонные букеты</span><span class="marquee__star">✿</span>
+          <span class="marquee__item">уход за растениями</span><span class="marquee__star">✿</span>
+          <span class="marquee__item marquee__item--accent">язык цветов</span><span class="marquee__star">✿</span>
+        </div>
+      </div>
+      <div class="marquee__row marquee__row--reverse">
+        <div class="marquee__track">
+          <span class="marquee__item">свежие истории</span><span class="marquee__star">❀</span>
+          <span class="marquee__item marquee__item--accent">садовые советы</span><span class="marquee__star">❀</span>
+          <span class="marquee__item">скоро открытие</span><span class="marquee__star">❀</span>
+          <span class="marquee__item marquee__item--accent">комнатные джунгли</span><span class="marquee__star">❀</span>
+        </div>
+        <div class="marquee__track">
+          <span class="marquee__item">свежие истории</span><span class="marquee__star">❀</span>
+          <span class="marquee__item marquee__item--accent">садовые советы</span><span class="marquee__star">❀</span>
+          <span class="marquee__item">скоро открытие</span><span class="marquee__star">❀</span>
+          <span class="marquee__item marquee__item--accent">комнатные джунгли</span><span class="marquee__star">❀</span>
+        </div>
+      </div>
+    </section>
+    <section class="about section theme theme--light" id="about">
+      <div class="section__head">
+        <p class="section__label reveal">(01) О проекте</p>
+        <p class="section__note reveal">что мы выращиваем</p>
+      </div>
+
+      <p class="about__lead">
+        «Цветочный»&nbsp;— это учебный онлайн-журнал для всех, кто хоть раз замирал
+        у&nbsp;витрины цветочной лавки. Мы&nbsp;собираем понятные гайды по&nbsp;уходу,
+        истории сортов, идеи сезонных букетов и&nbsp;маленькие открытия, которые
+        делают дом живее.
+      </p>
+      <ul class="about__list">
+        <li class="about__item reveal">
+          <span class="about__number">1</span>
+          <h2 class="about__title">статья уже распустилась</h2>
+          <p class="about__text">Первый материал можно прочитать прямо сейчас&nbsp;— остальные набирают бутоны.</p>
+        </li>
+        <li class="about__item reveal">
+          <span class="about__number">12</span>
+          <h2 class="about__title">материалов в&nbsp;работе</h2>
+          <p class="about__text">Гайды, интервью с&nbsp;флористами и&nbsp;календарь цветения на&nbsp;весь год.</p>
+        </li>
+        <li class="about__item reveal">
+          <span class="about__number">365</span>
+          <h2 class="about__title">дней в&nbsp;цвету</h2>
+          <p class="about__text">Рассказываем, что цветёт прямо сейчас&nbsp;— в&nbsp;любой сезон и&nbsp;на&nbsp;любом подоконнике.</p>
+        </li>
+      </ul>
+    </section>
+    <section class="articles section theme theme--dark" id="articles">
+      <div class="section__head">
+        <p class="section__label reveal">(02) Статьи</p>
+        <p class="section__note reveal">свежий номер</p>
+      </div>
+
+      <h2 class="articles__title split split--words">Истории, которые распускаются</h2>
+
+      <article class="card articles__card reveal">
+        <a class="card__link" href="#">
+          <div class="card__media">
+            <div class="card__art">
+              <svg class="flower card__flower card__flower--one" viewBox="0 0 200 200">
+                <g class="flower__petals">
+                  <ellipse cx="100" cy="52" rx="22" ry="46"/>
+                  <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(60 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(120 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(180 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(240 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="22" ry="46" transform="rotate(300 100 100)"/>
+                </g>
+                <circle class="flower__center" cx="100" cy="100" r="20"/>
+              </svg>
+              <svg class="flower flower--lilac card__flower card__flower--two" viewBox="0 0 200 200">
+                <g class="flower__petals">
+                  <ellipse cx="100" cy="52" rx="26" ry="46"/>
+                  <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(72 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(144 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(216 100 100)"/>
+                  <ellipse cx="100" cy="52" rx="26" ry="46" transform="rotate(288 100 100)"/>
+                </g>
+                <circle class="flower__center" cx="100" cy="100" r="18"/>
+              </svg>
+              <span class="card__stem"></span>
+            </div>
+            <span class="card__tag">Уход</span>
+          </div>
+
+          <div class="card__body">
+            <p class="card__meta"><time datetime="2026-09-28">28 сентября 2026</time> · 6 минут</p>
+            <h3 class="card__title">Как продлить жизнь букету: 7&nbsp;простых правил</h3>
+            <p class="card__excerpt">
+              Подрезать стебли под водой, менять воду каждый день и&nbsp;держать вазу подальше от&nbsp;фруктов.
+              Разбираемся, почему это работает и&nbsp;какие лайфхаки из&nbsp;интернета лучше забыть.
+            </p>
+            <span class="card__more">Читать статью <span class="card__arrow">→</span></span>
+          </div>
+        </a>
+      </article>
+      <ul class="soon articles__soon">
+        <li class="soon__item reveal">
+          <span class="soon__index">02</span>
+          <h3 class="soon__title">Календарь цветения: что сажать осенью</h3>
+          <span class="soon__status">Coming soon</span>
+        </li>
+        <li class="soon__item reveal">
+          <span class="soon__index">03</span>
+          <h3 class="soon__title">Язык цветов: что на&nbsp;самом деле значит ваш букет</h3>
+          <span class="soon__status">Coming soon</span>
+        </li>
+        <li class="soon__item reveal">
+          <span class="soon__index">04</span>
+          <h3 class="soon__title">Интервью с&nbsp;флористом: один день в&nbsp;мастерской</h3>
+          <span class="soon__status">Coming soon</span>
+        </li>
+        <li class="soon__item reveal">
+          <span class="soon__index">05</span>
+          <h3 class="soon__title">Комнатные джунгли для тех, кто всё забывает</h3>
+          <span class="soon__status">Coming soon</span>
+        </li>
+      </ul>
+      <div class="preview">
+        <svg class="preview__blob" viewBox="0 0 200 200">
+          <path class="preview__path" d="M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z">
+            <animate attributeName="d" dur="6s" repeatCount="indefinite"
+              values="M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z;
+                      M100,30 C160,10 190,70 170,110 C150,160 120,185 90,170 C40,160 10,130 30,90 C45,50 60,40 100,30 Z;
+                      M110,15 C150,35 195,60 175,105 C160,150 140,190 95,175 C50,165 15,140 25,95 C35,50 70,5 110,15 Z;
+                      M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z"/>
+          </path>
+        </svg>
+        <span class="preview__emoji">✿</span>
+      </div>
+    </section>
+    <section class="contact section theme theme--pink" id="contact">
+      <div class="section__head">
+        <p class="section__label reveal">(03) На связи</p>
+        <p class="section__note reveal">без спама, только цветы</p>
+      </div>
+
+      <div class="contact__grid">
+        <div class="contact__intro">
+          <h2 class="contact__title split split--words">Оставайтесь на&nbsp;связи</h2>
+          <p class="contact__text reveal">
+            Напишите нам&nbsp;— пришлём письмо, как только откроемся, и&nbsp;поделимся первыми
+            статьями раньше всех. Идеи для материалов тоже очень ждём.
+          </p>
+        </div>
+
+        <form class="form contact__form reveal" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form__field">
+            <input class="form__input" type="text" id="name" name="name" placeholder=" " autocomplete="name" required>
+            <label class="form__label" for="name">Как вас зовут</label>
+          </div>
+
+          <div class="form__field">
+            <input class="form__input" type="email" id="email" name="email" placeholder=" " autocomplete="email" required>
+            <label class="form__label" for="email">Email</label>
+          </div>
+
+          <div class="form__field">
+            <textarea class="form__input form__input--textarea" id="message" name="message" placeholder=" " rows="3"></textarea>
+            <label class="form__label" for="message">Любимый цветок или идея статьи</label>
+          </div>
+
+          <input class="form__trap" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="_subject" value="Цветочный: новая заявка">
+
+          <label class="form__check">
+            <input class="form__checkbox" type="checkbox" name="consent" required>
+            <span class="form__checkmark"></span>
+            <span class="form__check-text">Согласен(на) на&nbsp;обработку персональных данных</span>
+          </label>
+
+          <div class="form__footer">
+            <button class="button form__submit magnetic" type="submit">
+              <span class="button__text">Отправить</span>
+              <span class="button__icon">✿</span>
+            </button>
+            <p class="form__note">Нажимая кнопку, вы подписываетесь на новости «Цветочного»</p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer theme theme--dark">
+    <div class="footer__top">
+      <p class="footer__text">Учебный проект о&nbsp;цветах.<br>Скоро открытие&nbsp;— не&nbsp;пропустите.</p>
+
+      <nav class="footer__nav">
+        <a class="footer__link" href="#about">О проекте</a>
+        <a class="footer__link" href="#articles">Статьи</a>
+        <a class="footer__link" href="#contact">На связи</a>
+      </nav>
+
+      <button class="footer__up magnetic" type="button">↑</button>
+    </div>
+
+    <p class="footer__wordmark split split--chars split--hover">цветочный</p>
+
+    <div class="footer__bottom">
+      <span>© <span class="footer__year">2026</span> Цветочный</span>
+      <span>Сделано с&nbsp;любовью к&nbsp;цветам</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

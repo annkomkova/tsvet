@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шпаргалка «Цветочный»</title>
+<meta name="description" content="Пошаговая шпаргалка для воркшопа: вёрстка заглушки «Цветочный» кусками, с адаптивом, SVG и JS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;700&family=Unbounded:wght@600;800&display=swap">
+<style>
+  :root {
+    --bg: #fbf8f3;
+    --surface: #ffffff;
+    --ink: #1e3a2b;
+    --muted: #5d6f63;
+    --line: #e4ddd1;
+    --accent: #c9456a;
+    --accent-soft: #ffe1e8;
+    --code-bg: #17291f;
+    --code-ink: #e9e4da;
+    --code-muted: #8fa396;
+    --pill-html: #ff8fab;
+    --pill-svg: #b9a6f2;
+    --pill-css: #ffd66b;
+    --pill-js: #c9e265;
+    --pill-other: #d9d2c5;
+    --pill-ink: #1e3a2b;
+    --focus: #c9456a;
+
+    --font-display: "Unbounded", "Arial Black", sans-serif;
+    --font-body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #12211a;
+      --surface: #182b21;
+      --ink: #f2ece2;
+      --muted: #a3b3a8;
+      --line: #2a4034;
+      --accent: #ff8fab;
+      --accent-soft: #3a2630;
+      --code-bg: #0d1813;
+      --code-ink: #e9e4da;
+      --code-muted: #7f9387;
+      --pill-other: #3a4d42;
+      --pill-ink: #13241b;
+      --focus: #ff8fab;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #12211a;
+    --surface: #182b21;
+    --ink: #f2ece2;
+    --muted: #a3b3a8;
+    --line: #2a4034;
+    --accent: #ff8fab;
+    --accent-soft: #3a2630;
+    --code-bg: #0d1813;
+    --code-ink: #e9e4da;
+    --code-muted: #7f9387;
+    --pill-other: #3a4d42;
+    --pill-ink: #13241b;
+    --focus: #ff8fab;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  a { color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 48px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 24px 96px;
+  }
+
+  /* ---------- Боковая навигация ---------- */
+  .toc {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 24px);
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .toc__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .toc__brand svg { width: 26px; height: 26px; fill: var(--pill-html); flex-shrink: 0; }
+
+  .toc__list, .toc__subs { list-style: none; margin: 0; padding: 0; }
+
+  .toc__step { margin-bottom: 4px; }
+
+  .toc__step > a {
+    display: flex;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .toc__step > a:hover { background: var(--accent-soft); }
+
+  .toc__step--active > a { background: var(--accent-soft); color: var(--accent); }
+
+  .toc__num {
+    min-width: 22px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toc__subs { margin: 2px 0 8px 42px; }
+
+  .toc__subs a {
+    display: flex;
+    gap: 6px;
+    padding: 2px 0;
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .toc__subs a:hover { color: var(--ink); }
+
+  .toc__subs a.is-done { text-decoration: line-through; opacity: 0.6; }
+
+  /* ---------- Шапка ---------- */
+  .intro { margin-bottom: 40px; }
+
+  .intro__eyebrow {
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .intro h1 {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(30px, 4.4vw, 52px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .intro__lead { max-width: 68ch; margin: 0 0 20px; font-size: 17px; }
+
+  .intro__rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .intro__rules li {
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: 14px;
+  }
+
+  .intro__rules b { display: block; margin-bottom: 2px; font-size: 15px; }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filters__label { margin-right: 4px; color: var(--muted); font-size: 14px; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font: 600 13px var(--font-mono);
+    cursor: pointer;
+  }
+
+  .chip::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--dot, var(--pill-other));
+  }
+
+  .chip[aria-pressed="false"] { opacity: 0.45; text-decoration: line-through; }
+
+  .chip--plain::before { display: none; }
+
+  /* ---------- Шаг ---------- */
+  .step {
+    padding-top: 48px;
+    margin-top: 48px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .step:first-of-type { margin-top: 0; }
+
+  .step__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .step__num {
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(34px, 5vw, 56px);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .step__notes { max-width: 70ch; margin: 0 0 8px; color: var(--muted); font-size: 16px; }
+
+  /* ---------- Подшаг ---------- */
+  .sub { margin-top: 36px; }
+
+  .sub__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    margin-bottom: 10px;
+  }
+
+  .sub__num {
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--bg);
+    font: 600 14px var(--font-mono);
+  }
+
+  .sub h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .done {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .done input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+  .say {
+    max-width: 72ch;
+    margin: 0 0 16px;
+    padding: 12px 16px 12px 18px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    font-size: 15px;
+  }
+
+  .say__title {
+    margin: 0 0 4px;
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .say ul { margin: 0; padding-left: 18px; }
+
+  .say li + li { margin-top: 4px; }
+
+  .say code, .step__notes code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--surface);
+    font: 0.88em var(--font-mono);
+  }
+
+  /* ---------- Кусок кода ---------- */
+  .chunk {
+    margin-top: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--code-bg);
+  }
+
+  .chunk__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    padding: 10px 12px 10px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pill {
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: var(--pill-other);
+    color: var(--pill-ink);
+    font: 600 12px var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+
+  .pill--html { background: var(--pill-html); }
+  .pill--svg { background: var(--pill-svg); }
+  .pill--css, .pill--fontcss { background: var(--pill-css); }
+  .pill--js, .pill--jscall { background: var(--pill-js); }
+
+  .chunk__title { font-weight: 700; font-size: 15px; }
+
+  .chunk__place {
+    flex-basis: 100%;
+    order: 3;
+    color: var(--muted);
+    font: 13px var(--font-mono);
+  }
+
+  .chunk__meta { margin-left: auto; color: var(--muted); font: 12px var(--font-mono); }
+
+  .copy {
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 600 13px var(--font-body);
+    cursor: pointer;
+  }
+
+  .copy:hover { border-color: var(--ink); }
+
+  .copy--ok { background: var(--pill-js); color: var(--pill-ink); border-color: transparent; }
+
+  .chunk pre {
+    margin: 0;
+    padding: 16px 18px;
+    max-height: 560px;
+    overflow: auto;
+    color: var(--code-ink);
+    font: 13.5px/1.6 var(--font-mono);
+    tab-size: 2;
+  }
+
+  .chunk--open pre { max-height: none; }
+
+  .chunk__more {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: 0;
+    border-top: 1px solid #ffffff14;
+    background: transparent;
+    color: var(--code-muted);
+    font: 600 13px var(--font-body);
+    cursor: pointer;
+  }
+
+  .chunk--open .chunk__more { display: none; }
+
+  body.hide-html .chunk--html,
+  body.hide-svg .chunk--svg,
+  body.hide-css .chunk--css,
+  body.hide-js .chunk--js,
+  body.hide-say .say { display: none; }
+
+  /* Подсветка синтаксиса (highlight.js) */
+  .hljs-comment { color: var(--code-muted); font-style: italic; }
+  .hljs-tag, .hljs-name, .hljs-selector-tag { color: #ff8fab; }
+  .hljs-attr, .hljs-attribute, .hljs-property { color: #b9a6f2; }
+  .hljs-string, .hljs-regexp { color: #c9e265; }
+  .hljs-number, .hljs-literal, .hljs-built_in { color: #ffd66b; }
+  .hljs-keyword, .hljs-selector-pseudo, .hljs-meta { color: #7fd1c4; }
+  .hljs-selector-class, .hljs-title, .hljs-title.function_ { color: #ffc98b; }
+  .hljs-variable, .hljs-params { color: var(--code-ink); }
+
+  .final {
+    margin-top: 64px;
+    padding: 24px;
+    border-radius: 16px;
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .final h2 { margin: 0 0 8px; font-family: var(--font-display); font-size: 22px; }
+
+  .final p { margin: 0; max-width: 70ch; }
+
+  @media (max-width: 900px) {
+    html { scroll-padding-top: 72px; }
+
+    .layout { display: block; padding: 0 16px 80px; }
+
+    .toc {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 5;
+      max-height: none;
+      margin: 0 -16px 24px;
+      padding: 10px 16px;
+      overflow-x: auto;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .toc__brand, .toc__subs { display: none; }
+
+    .toc__list { display: flex; gap: 4px; width: max-content; }
+
+    .toc__step { margin: 0; }
+
+    .toc__step > a { white-space: nowrap; font-size: 14px; }
+
+    .chunk pre { font-size: 12.5px; padding: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+
+</head>
+<body>
+<div class="layout">
+  <aside class="toc">
+    <p class="toc__brand">
+      <svg viewBox="0 0 200 200"><ellipse cx="100" cy="52" rx="24" ry="46"/><ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(72 100 100)"/><ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(144 100 100)"/><ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(216 100 100)"/><ellipse cx="100" cy="52" rx="24" ry="46" transform="rotate(288 100 100)"/></svg>
+      Цветочный
+    </p>
+    <ul class="toc__list">
+      <li class="toc__step" data-step="0"><a href="#step-0"><span class="toc__num">0</span>Подготовка</a><ul class="toc__subs"><li><a href="#sub-0-1">0.1 Структура проекта</a></li><li><a href="#sub-0-2">0.2 Каркас index.html</a></li><li><a href="#sub-0-3">0.3 Шрифты</a></li><li><a href="#sub-0-4">0.4 Базовые стили и токены</a></li><li><a href="#sub-0-5">0.5 Файл скриптов</a></li></ul></li>
+      <li class="toc__step" data-step="1"><a href="#step-1"><span class="toc__num">1</span>Шапка</a><ul class="toc__subs"><li><a href="#sub-1-1">1.1 Каркас шапки и логотип</a></li><li><a href="#sub-1-2">1.2 Навигация</a></li><li><a href="#sub-1-3">1.3 Кнопка</a></li><li><a href="#sub-1-4">1.4 Бургер и мобильное меню</a></li><li><a href="#sub-1-5">1.5 Шапка при скролле</a></li></ul></li>
+      <li class="toc__step" data-step="2"><a href="#step-2"><span class="toc__num">2</span>Первый экран</a><ul class="toc__subs"><li><a href="#sub-2-1">2.1 Каркас и заголовок</a></li><li><a href="#sub-2-2">2.2 Анимация букв и появление при скролле</a></li><li><a href="#sub-2-3">2.3 Низ экрана: текст, бейдж, подсказка</a></li><li><a href="#sub-2-4">2.4 Декор: пятно, цветы, параллакс</a></li></ul></li>
+      <li class="toc__step" data-step="3"><a href="#step-3"><span class="toc__num">3</span>Бегущая строка</a><ul class="toc__subs"><li><a href="#sub-3-1">3.1 Разметка и стили ленты</a></li><li><a href="#sub-3-2">3.2 Движение от скролла</a></li></ul></li>
+      <li class="toc__step" data-step="4"><a href="#step-4"><span class="toc__num">4</span>О проекте</a><ul class="toc__subs"><li><a href="#sub-4-1">4.1 Каркас секции и появление при скролле</a></li><li><a href="#sub-4-2">4.2 Текст, который «проявляется» по словам</a></li><li><a href="#sub-4-3">4.3 Карточки со счётчиками</a></li></ul></li>
+      <li class="toc__step" data-step="5"><a href="#step-5"><span class="toc__num">5</span>Статьи</a><ul class="toc__subs"><li><a href="#sub-5-1">5.1 Каркас секции и смена темы страницы</a></li><li><a href="#sub-5-2">5.2 Карточка статьи</a></li><li><a href="#sub-5-3">5.3 Список «Coming soon»</a></li><li><a href="#sub-5-4">5.4 Пятно-превью за курсором</a></li></ul></li>
+      <li class="toc__step" data-step="6"><a href="#step-6"><span class="toc__num">6</span>Форма «Оставайтесь на связи»</a><ul class="toc__subs"><li><a href="#sub-6-1">6.1 Каркас секции и розовая тема</a></li><li><a href="#sub-6-2">6.2 Поля с плавающими подписями</a></li><li><a href="#sub-6-3">6.3 Согласие и кнопка отправки</a></li></ul></li>
+      <li class="toc__step" data-step="7"><a href="#step-7"><span class="toc__num">7</span>Подвал</a><ul class="toc__subs"><li><a href="#sub-7-1">7.1 Каркас подвала, ссылки и кнопка «наверх»</a></li></ul></li>
+      <li class="toc__step" data-step="8"><a href="#step-8"><span class="toc__num">8</span>Футер</a><ul class="toc__subs"><li><a href="#sub-8-1">8.1 Большой логотип и копирайт</a></li></ul></li>
+      <li class="toc__step" data-step="9"><a href="#step-9"><span class="toc__num">9</span>Курсор</a><ul class="toc__subs"><li><a href="#sub-9-1">9.1 Курсор с подписями</a></li><li><a href="#sub-9-2">9.2 Магнитные кнопки</a></li></ul></li>
+      <li class="toc__step" data-step="10"><a href="#step-10"><span class="toc__num">10</span>Прелоадер</a><ul class="toc__subs"><li><a href="#sub-10-1">10.1 Прелоадер</a></li></ul></li>
+    </ul>
+  </aside>
+
+  <main>
+    <header class="intro">
+      <p class="intro__eyebrow">Шпаргалка к воркшопу · 11 шагов, 31 подшаг, 92 куска кода</p>
+      <h1>Верстаем «Цветочный» по кускам</h1>
+      <p class="intro__lead">
+        Заглушка главной страницы учебного проекта, разобранная на шаги в том порядке, в котором мы верстаем её на паре.
+        Каждый кусок сразу с адаптивом. После любого шага страница открывается без ошибок, так что остановиться можно где угодно.
+      </p>
+      <ul class="intro__rules">
+        <li><b>HTML — по слотам</b>В разметке стоят комментарии <code>&lt;!-- ↓ 2.3 … --&gt;</code>. Кусок с этим номером вставляем вместо комментария.</li>
+        <li><b>CSS — в конец файла</b>Стили каждого куска дописываем в конец <code>style.css</code> по порядку шагов.</li>
+        <li><b>JS — как в курсе</b>Вызов функции дописываем в список в начале <code>main.js</code>, саму функцию — в конец файла. Только <code>let</code>, <code>querySelector</code>, <code>classList</code>, события, <code>setInterval</code>.</li>
+        <li><b>SVG — отдельно</b>Каждая картинка — свой кусок, даже если такой же цветок уже был. Копируйте целиком.</li>
+        <li><b>Никаких data-атрибутов</b>JS находит всё по классам: <code>split--chars</code>, <code>magnetic</code>, <code>theme--dark</code> и т.&nbsp;д.</li>
+        <li><b>Formspree</b>Форма отправляется без JS. Перед показом замените <code>YOUR_FORM_ID</code> в шаге 6.2 на ID своей формы.</li>
+      </ul>
+      <div class="filters">
+        <span class="filters__label">Показывать:</span>
+        <button class="chip" type="button" data-filter="html" aria-pressed="true" style="--dot: var(--pill-html)">HTML</button>
+        <button class="chip" type="button" data-filter="svg" aria-pressed="true" style="--dot: var(--pill-svg)">SVG</button>
+        <button class="chip" type="button" data-filter="css" aria-pressed="true" style="--dot: var(--pill-css)">CSS</button>
+        <button class="chip" type="button" data-filter="js" aria-pressed="true" style="--dot: var(--pill-js)">JS</button>
+        <button class="chip chip--plain" type="button" data-filter="say" aria-pressed="true">Что проговорить</button>
+      </div>
+    </header>
+
+    <section class="step" id="step-0" data-step="0">
+      <div class="step__head"><span class="step__num">0</span><h2>Подготовка</h2></div>
+      <p class="step__notes">Создаём структуру проекта, подключаем шрифты, задаём цветовые токены и базовый JS, на который опираются все следующие шаги.</p>
+      <div class="sub" id="sub-0-1">
+        <div class="sub__head"><span class="sub__num">0.1</span><h3>Структура проекта</h3><label class="done"><input type="checkbox" data-sub="0-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Папку fonts с четырьмя файлами <code>.woff2</code> раздаём студентам заранее (она лежит в архиве).</li></ul></div>
+        <div class="chunk chunk--other"><div class="chunk__bar"><span class="pill pill--text">Файлы</span><span class="chunk__title">Папки и файлы</span><span class="chunk__meta">12 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-plaintext">tsvetochny/
+├── index.html
+├── css/
+│   ├── fonts.css
+│   └── style.css
+├── js/
+│   └── main.js
+└── fonts/
+    ├── manrope-cyrillic.woff2
+    ├── manrope-latin.woff2
+    ├── unbounded-cyrillic.woff2
+    └── unbounded-latin.woff2</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-0-2">
+        <div class="sub__head"><span class="sub__num">0.2</span><h3>Каркас index.html</h3><label class="done"><input type="checkbox" data-sub="0-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Комментарии «↓ 1.1 …» — места, куда по ходу пары вставляем куски разметки. Когда кусок вставлен, комментарий удаляем.</li><li>Все блоки страницы — отдельные БЭМ-блоки: header, hero, marquee, about, articles, contact, footer.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас index.html</span><span class="chunk__place">→ index.html — новый файл</span><span class="chunk__meta">30 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ru&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;title&gt;Цветочный — скоро открытие&lt;/title&gt;
+  &lt;meta name=&quot;description&quot; content=&quot;Цветочный — учебный проект о цветах, флористике и уходе за растениями. Скоро открытие.&quot;&gt;
+  &lt;meta name=&quot;theme-color&quot; content=&quot;#f7f1e8&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/fonts.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/style.css&quot;&gt;
+&lt;/head&gt;
+&lt;body class=&quot;page&quot;&gt;
+  &lt;!-- ↓ 10.1 Прелоадер --&gt;
+  &lt;!-- ↓ 9.1 Курсор с подписями --&gt;
+  &lt;!-- ↓ 1.1 Каркас шапки и логотип --&gt;
+  &lt;!-- ↓ 1.4 Бургер и мобильное меню --&gt;
+
+  &lt;main class=&quot;main&quot; id=&quot;top&quot;&gt;
+    &lt;!-- ↓ 2.1 Каркас и заголовок --&gt;
+    &lt;!-- ↓ 3.1 Разметка и стили ленты --&gt;
+    &lt;!-- ↓ 4.1 Каркас секции и появление при скролле --&gt;
+    &lt;!-- ↓ 5.1 Каркас секции и смена темы страницы --&gt;
+    &lt;!-- ↓ 6.1 Каркас секции и розовая тема --&gt;
+  &lt;/main&gt;
+
+  &lt;!-- ↓ 7.1 Каркас подвала, ссылки и кнопка «наверх» --&gt;
+
+  &lt;script src=&quot;js/main.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-0-3">
+        <div class="sub__head"><span class="sub__num">0.3</span><h3>Шрифты</h3><label class="done"><input type="checkbox" data-sub="0-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Шрифты вариативные: один файл содержит все начертания, поэтому достаточно указать диапазон font-weight.</li><li>unicode-range говорит браузеру скачивать файл, только если на странице есть символы из этого диапазона.</li></ul></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--fontcss">CSS</span><span class="chunk__title">Шрифты</span><span class="chunk__place">→ css/fonts.css — новый файл</span><span class="chunk__meta">31 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">@font-face {
+  font-family: &quot;Unbounded&quot;;
+  src: url(&quot;../fonts/unbounded-cyrillic.woff2&quot;) format(&quot;woff2&quot;);
+  font-weight: 200 900;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: &quot;Unbounded&quot;;
+  src: url(&quot;../fonts/unbounded-latin.woff2&quot;) format(&quot;woff2&quot;);
+  font-weight: 200 900;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: &quot;Manrope&quot;;
+  src: url(&quot;../fonts/manrope-cyrillic.woff2&quot;) format(&quot;woff2&quot;);
+  font-weight: 200 800;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: &quot;Manrope&quot;;
+  src: url(&quot;../fonts/manrope-latin.woff2&quot;) format(&quot;woff2&quot;);
+  font-weight: 200 800;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-0-4">
+        <div class="sub__head"><span class="sub__num">0.4</span><h3>Базовые стили и токены</h3><label class="done"><input type="checkbox" data-sub="0-4"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Все цвета, шрифты и отступы — в переменных на <code>:root</code>. Блок page хранит «тему»: --bg, --ink, --accent. Позже мы будем подменять их модификаторами <code>page--dark</code> и <code>page--pink</code>.</li><li>Здесь же общая анимация spin и отключение движения для тех, кто включил в системе «уменьшить движение».</li></ul></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">102 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   0. База
+   ========================================================================== */
+:root {
+  --c-cream: #f7f1e8;
+  --c-green: #1e3a2b;
+  --c-pink: #ff8fab;
+  --c-pink-soft: #ffc2d1;
+  --c-lilac: #b9a6f2;
+  --c-butter: #ffd66b;
+  --c-lime: #c9e265;
+  --c-peach: #ffc98b;
+
+  --font-display: &quot;Unbounded&quot;, &quot;Arial Black&quot;, sans-serif;
+  --font-body: &quot;Manrope&quot;, &quot;Helvetica Neue&quot;, Arial, sans-serif;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --radius: clamp(16px, 2vw, 28px);
+  --header-h: 84px;
+  --ease-out: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1, h2, h3, p, ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+svg {
+  display: block;
+}
+
+::selection {
+  background: var(--c-pink);
+  color: var(--c-green);
+}
+
+.page {
+  --bg: var(--c-cream);
+  --ink: var(--c-green);
+  --accent: var(--c-pink);
+  --muted: rgba(30, 58, 43, 0.62);
+  --line: rgba(30, 58, 43, 0.18);
+
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: background-color 0.8s var(--ease-out), color 0.8s var(--ease-out);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-0-5">
+        <div class="sub__head"><span class="sub__num">0.5</span><h3>Файл скриптов</h3><label class="done"><input type="checkbox" data-sub="0-5"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Скрипты пишем так же, как в курсе: сверху — список вызовов функций, ниже — сами функции.</li><li>На каждом шаге добавляем строку вызова в список и функцию в конец файла. Функции можно вызывать раньше, чем они описаны в файле: браузер заранее знает обо всех function.</li></ul></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">4 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// Цветочный — скрипты главной страницы
+// Сверху вызываем функции, ниже описываем их
+
+// ↓ сюда добавляем вызовы функций</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-1" data-step="1">
+      <div class="step__head"><span class="step__num">1</span><h2>Шапка</h2></div>
+      <p class="step__notes">Фиксированная шапка: логотип, навигация, кнопка, бургер с мобильным меню. Шапка прячется при скролле вниз и появляется при скролле вверх.</p>
+      <div class="sub" id="sub-1-1">
+        <div class="sub__head"><span class="sub__num">1.1</span><h3>Каркас шапки и логотип</h3><label class="done"><input type="checkbox" data-sub="1-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>header — блок, <code>header__inner</code> — элемент. Логотип — отдельный блок logo, который «подмешан» в шапку как <code>header__logo</code> (БЭМ-микс).</li><li>Слот для SVG оставляем внутри ссылки, SVG вставим следующим куском.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас шапки и логотип</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.1 Каркас шапки и логотип»</span><span class="chunk__meta">11 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;header class=&quot;header&quot;&gt;
+  &lt;div class=&quot;header__inner&quot;&gt;
+    &lt;a class=&quot;logo header__logo&quot; href=&quot;#top&quot;&gt;
+      &lt;!-- ↓ 1.1 SVG: иконка логотипа (цветок из 5 лепестков) --&gt;
+      &lt;span class=&quot;logo__text&quot;&gt;цветочный&lt;/span&gt;
+    &lt;/a&gt;
+    &lt;!-- ↓ 1.2 Навигация --&gt;
+    &lt;!-- ↓ 1.3 Кнопка --&gt;
+    &lt;!-- ↓ 1.4 Бургер и мобильное меню --&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: иконка логотипа (цветок из 5 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.1 SVG: иконка логотипа (цветок из 5 лепестков)»</span><span class="chunk__meta">9 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;logo__icon&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;24&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;24&quot; ry=&quot;46&quot; transform=&quot;rotate(72 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;24&quot; ry=&quot;46&quot; transform=&quot;rotate(144 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;24&quot; ry=&quot;46&quot; transform=&quot;rotate(216 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;24&quot; ry=&quot;46&quot; transform=&quot;rotate(288 100 100)&quot;/&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">46 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   1.1 Шапка и логотип
+   ========================================================================== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 var(--gutter);
+  transition: transform 0.6s var(--ease-out), background-color 0.4s, box-shadow 0.4s;
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: var(--header-h);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.logo__icon {
+  width: 30px;
+  height: 30px;
+  fill: var(--c-pink);
+  transition: transform 0.8s var(--ease-out);
+}
+
+.logo:hover .logo__icon {
+  transform: rotate(144deg) scale(1.1);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-h: 72px;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-1-2">
+        <div class="sub__head"><span class="sub__num">1.2</span><h3>Навигация</h3><label class="done"><input type="checkbox" data-sub="1-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Ссылки лежат прямо в nav, без списка.</li><li>Эффект «прокрутки» текста при наведении: у текста есть text-shadow — его копия на 1.5em ниже. Ссылка обрезает всё лишнее (overflow: hidden), а при наведении текст уезжает вверх, и на его место приезжает розовая копия.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Навигация</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.2 Навигация»</span><span class="chunk__meta">5 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;nav class=&quot;nav header__nav&quot;&gt;
+  &lt;a class=&quot;nav__link&quot; href=&quot;#about&quot;&gt;&lt;span class=&quot;nav__text&quot;&gt;О проекте&lt;/span&gt;&lt;/a&gt;
+  &lt;a class=&quot;nav__link&quot; href=&quot;#articles&quot;&gt;&lt;span class=&quot;nav__text&quot;&gt;Статьи&lt;/span&gt;&lt;/a&gt;
+  &lt;a class=&quot;nav__link&quot; href=&quot;#contact&quot;&gt;&lt;span class=&quot;nav__text&quot;&gt;На связи&lt;/span&gt;&lt;/a&gt;
+&lt;/nav&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">36 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   1.2 Навигация
+   ========================================================================== */
+.nav {
+  display: flex;
+  gap: 32px;
+}
+
+.header__nav {
+  margin-left: auto;
+}
+
+.nav__link {
+  display: inline-block;
+  height: 1.5em;
+  overflow: hidden;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.nav__text {
+  display: block;
+  text-shadow: 0 1.5em 0 var(--accent);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.nav__link:hover .nav__text,
+.nav__link:focus-visible .nav__text {
+  transform: translateY(-1.5em);
+}
+
+@media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-1-3">
+        <div class="sub__head"><span class="sub__num">1.3</span><h3>Кнопка</h3><label class="done"><input type="checkbox" data-sub="1-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>button — самостоятельный блок, он ещё пригодится в форме. Модификатор <code>button--small</code> делает её компактной.</li><li>Заливка при наведении — псевдоэлемент <code>::before</code>: круг, который вырастает снизу из <code>scale(0)</code>.</li><li>Класс magnetic пригодится на шаге 9 — там кнопки начнут «притягиваться» к курсору.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Кнопка</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.3 Кнопка»</span><span class="chunk__meta">3 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;a class=&quot;button button--small header__button magnetic&quot; href=&quot;#contact&quot;&gt;
+  &lt;span class=&quot;button__text&quot;&gt;Подписаться&lt;/span&gt;
+&lt;/a&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">77 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   1.3 Кнопка
+   ========================================================================== */
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 36px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  transition: color 0.5s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.button::before {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  z-index: -1;
+  width: 150%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c-pink);
+  transform: translate(-50%, 0) scale(0);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.button:hover,
+.button:focus-visible {
+  color: var(--c-green);
+}
+
+.button:hover::before,
+.button:focus-visible::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.button--small {
+  padding: 12px 22px;
+  font-size: 14px;
+}
+
+.button__text,
+.button__icon {
+  position: relative;
+  pointer-events: none;
+}
+
+.button__icon {
+  display: inline-block;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.button:hover .button__icon {
+  transform: rotate(180deg) scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .header__button {
+    display: none;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-1-4">
+        <div class="sub__head"><span class="sub__num">1.4</span><h3>Бургер и мобильное меню</h3><label class="done"><input type="checkbox" data-sub="1-4"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>На ширине до 768px навигация и кнопка прячутся, появляется бургер.</li><li>Меню раскрывается кругом из точки, где стоит бургер: clip-path: <code>circle(0)</code> → <code>circle(150%)</code>.</li><li>Пока меню открыто, блокируем прокрутку страницы модификатором <code>page--locked</code>.</li><li>JS как в курсе: по клику на бургер переключаем классы через classList.toggle, по клику на ссылку меню — убираем их.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Бургер и мобильное меню</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.4 Бургер и мобильное меню»</span><span class="chunk__meta">4 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;button class=&quot;burger header__burger&quot; type=&quot;button&quot;&gt;
+  &lt;span class=&quot;burger__line&quot;&gt;&lt;/span&gt;
+  &lt;span class=&quot;burger__line&quot;&gt;&lt;/span&gt;
+&lt;/button&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Бургер и мобильное меню</span><span class="chunk__place">→ index.html — вместо комментария «↓ 1.4 Бургер и мобильное меню»</span><span class="chunk__meta">8 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;menu&quot;&gt;
+  &lt;nav class=&quot;menu__nav&quot;&gt;
+    &lt;a class=&quot;menu__link&quot; href=&quot;#about&quot;&gt;&lt;span class=&quot;menu__index&quot;&gt;01&lt;/span&gt;О проекте&lt;/a&gt;
+    &lt;a class=&quot;menu__link&quot; href=&quot;#articles&quot;&gt;&lt;span class=&quot;menu__index&quot;&gt;02&lt;/span&gt;Статьи&lt;/a&gt;
+    &lt;a class=&quot;menu__link&quot; href=&quot;#contact&quot;&gt;&lt;span class=&quot;menu__index&quot;&gt;03&lt;/span&gt;На связи&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;p class=&quot;menu__footer&quot;&gt;учебный проект · 2026&lt;/p&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">126 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   1.4 Бургер и мобильное меню
+   ========================================================================== */
+.page--locked {
+  overflow: hidden;
+}
+
+.header__burger {
+  display: none;
+}
+
+.burger {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.burger__line {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.burger__line:first-child {
+  top: 19px;
+}
+
+.burger__line:last-child {
+  top: 27px;
+}
+
+.burger--open .burger__line:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.burger--open .burger__line:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(var(--header-h) + 32px) var(--gutter) var(--gutter);
+  background: var(--c-pink);
+  color: var(--c-green);
+  clip-path: circle(0 at calc(100% - var(--gutter) - 24px) calc(var(--header-h) / 2));
+  visibility: hidden;
+  transition: clip-path 0.9s var(--ease-in-out), visibility 0s 0.9s;
+}
+
+.menu--open {
+  clip-path: circle(150% at calc(100% - var(--gutter) - 24px) calc(var(--header-h) / 2));
+  visibility: visible;
+  transition: clip-path 0.9s var(--ease-in-out), visibility 0s;
+}
+
+.menu__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 11vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  transform: translateY(60px);
+  transition: transform 0.8s var(--ease-out), opacity 0.8s;
+}
+
+.menu--open .menu__link {
+  opacity: 1;
+  transform: none;
+}
+
+.menu--open .menu__link:nth-child(1) { transition-delay: 0.25s; }
+.menu--open .menu__link:nth-child(2) { transition-delay: 0.32s; }
+.menu--open .menu__link:nth-child(3) { transition-delay: 0.39s; }
+
+.menu__index {
+  padding-top: 0.6em;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.menu__footer {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Шапка поверх открытого меню */
+.header--menu {
+  color: var(--c-green);
+}
+
+.header--menu .logo__icon {
+  fill: var(--c-cream);
+}
+
+@media (max-width: 768px) {
+  .header__burger {
+    display: block;
+    margin-left: auto;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">burgerMenu()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">23 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 1.4 Бургер и мобильное меню
+function burgerMenu() {
+  let burger = document.querySelector(&#x27;.burger&#x27;)
+  let menu = document.querySelector(&#x27;.menu&#x27;)
+  let header = document.querySelector(&#x27;.header&#x27;)
+  let links = document.querySelectorAll(&#x27;.menu__link&#x27;)
+
+  burger.addEventListener(&#x27;click&#x27;, () =&gt; {
+    burger.classList.toggle(&#x27;burger--open&#x27;)
+    menu.classList.toggle(&#x27;menu--open&#x27;)
+    header.classList.toggle(&#x27;header--menu&#x27;)
+    document.body.classList.toggle(&#x27;page--locked&#x27;)
+  })
+
+  links.forEach((link) =&gt; {
+    link.addEventListener(&#x27;click&#x27;, () =&gt; {
+      burger.classList.remove(&#x27;burger--open&#x27;)
+      menu.classList.remove(&#x27;menu--open&#x27;)
+      header.classList.remove(&#x27;header--menu&#x27;)
+      document.body.classList.remove(&#x27;page--locked&#x27;)
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-1-5">
+        <div class="sub__head"><span class="sub__num">1.5</span><h3>Шапка при скролле</h3><label class="done"><input type="checkbox" data-sub="1-5"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Два модификатора: <code>header--scrolled</code> добавляет полупрозрачный фон с размытием, <code>header--hidden</code> прячет шапку, когда листаем вниз.</li><li>В JS запоминаем прошлую прокрутку в lastScroll: если новая больше — листаем вниз.</li><li>color-mix смешивает текущий цвет фона темы с прозрачностью — фон шапки сам подстроится под тёмную и розовую секции.</li></ul></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">20 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   1.5 Шапка при скролле
+   ========================================================================== */
+.header--scrolled {
+  background-color: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.header--hidden {
+  transform: translateY(-100%);
+}
+
+.header--menu.header--scrolled {
+  background-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">headerScroll()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">23 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 1.5 Шапка при скролле
+function headerScroll() {
+  let header = document.querySelector(&#x27;.header&#x27;)
+  let lastScroll = 0
+
+  window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+    let scroll = window.scrollY
+
+    if (scroll &gt; 20) {
+      header.classList.add(&#x27;header--scrolled&#x27;)
+    } else {
+      header.classList.remove(&#x27;header--scrolled&#x27;)
+    }
+
+    if (scroll &gt; 160 &amp;&amp; scroll &gt; lastScroll &amp;&amp; !header.classList.contains(&#x27;header--menu&#x27;)) {
+      header.classList.add(&#x27;header--hidden&#x27;)
+    } else {
+      header.classList.remove(&#x27;header--hidden&#x27;)
+    }
+
+    lastScroll = scroll
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-2" data-step="2">
+      <div class="step__head"><span class="step__num">2</span><h2>Первый экран</h2></div>
+      <p class="step__notes">Верстаем в четыре захода: статичный каркас и заголовок → анимация букв → низ экрана с бейджем → декор с цветами и параллаксом.</p>
+      <div class="sub" id="sub-2-1">
+        <div class="sub__head"><span class="sub__num">2.1</span><h3>Каркас и заголовок</h3><label class="done"><input type="checkbox" data-sub="2-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Экран высотой 100svh (svh учитывает панели мобильного браузера, 100vh — запасной вариант для старых браузеров).</li><li>Заголовок разбит на две строки: вторая прижата вправо модификатором <code>hero__line--shift</code> — так получается асимметричная композиция.</li><li>Размер шрифта задан через vw, чтобы слово всегда занимало всю ширину экрана. clamp не даёт ему стать слишком мелким или огромным.</li><li>Классы split, <code>split--chars</code>, <code>split--hover</code> пока ни на что не влияют — оживим их в 2.2.</li><li>Классы theme и <code>theme--light</code> пригодятся на шаге 5, когда страница начнёт менять цвет.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас и заголовок</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.1 Каркас и заголовок»</span><span class="chunk__meta">16 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;section class=&quot;hero theme theme--light&quot;&gt;
+  &lt;!-- ↓ 2.4 Декор: пятно, цветы, параллакс --&gt;
+  &lt;div class=&quot;hero__inner&quot;&gt;
+    &lt;p class=&quot;hero__eyebrow split split--words&quot;&gt;учебный проект · сезон 2026&lt;/p&gt;
+
+    &lt;h1 class=&quot;hero__title&quot;&gt;
+      &lt;span class=&quot;hero__line split split--chars split--hover&quot;&gt;Цветоч&lt;/span&gt;
+      &lt;span class=&quot;hero__line hero__line--shift&quot;&gt;
+        &lt;span class=&quot;split split--chars split--hover split--delay&quot;&gt;ный&lt;/span&gt;
+        &lt;span class=&quot;hero__asterisk fade&quot;&gt;✿&lt;/span&gt;
+      &lt;/span&gt;
+    &lt;/h1&gt;
+
+    &lt;!-- ↓ 2.3 Низ экрана: текст, бейдж, подсказка --&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">63 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   2.1 Первый экран: каркас и заголовок
+   ========================================================================== */
+.hero {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: calc(var(--header-h) + 24px) var(--gutter) var(--gutter);
+  overflow: hidden;
+}
+
+.hero__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.hero__eyebrow {
+  margin-bottom: auto;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  margin: clamp(32px, 6vh, 64px) 0 clamp(24px, 4vh, 48px);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(64px, 17vw, 300px);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  text-transform: lowercase;
+}
+
+.hero__line {
+  display: block;
+}
+
+.hero__line--shift {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-right: 4vw;
+}
+
+.hero__asterisk {
+  display: inline-block;
+  margin-left: 0.08em;
+  font-size: 0.4em;
+  line-height: 1;
+  color: var(--c-pink);
+  animation: spin 10s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .hero__line--shift {
+    padding-right: 0;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-2-2">
+        <div class="sub__head"><span class="sub__num">2.2</span><h3>Анимация букв и появление при скролле</h3><label class="done"><input type="checkbox" data-sub="2-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li><code>splitText()</code> разбивает текст на кусочки: у <code>split--chars</code> — на буквы, у <code>split--words</code> — на слова. Каждое слово — <code>split__word</code> с overflow: hidden, внутри лежат <code>split__item</code>. Кусочки стоят ниже своей «маски» и выезжают вверх, когда блок получает модификатор <code>split--visible</code>.</li><li>Задержку для каждого кусочка пишем прямо в style: номер кусочка × 45 мс. Модификатор <code>split--delay</code> добавляет ещё 300 мс, чтобы вторая строка заголовка поехала после первой.</li><li><code>checkElements()</code> проверяет все <code>.split</code>, <code>.reveal</code> и <code>.fade</code>: если верх элемента поднялся выше 90% высоты экрана, добавляем модификатор --visible. Проверяем сразу при загрузке и при каждом скролле. Класс <code>.reveal</code> появится на шаге 4.</li><li>Пока на body висит <code>page--loading</code>, ничего не показываем — это пригодится для прелоадера на шаге 10.</li><li>fade — простое появление: прозрачность и масштаб. Его используют звёздочка в заголовке и цветы из шага 2.4.</li><li><code>hoverLetters()</code>: при наведении буква получает модификатор и подпрыгивает, через 700 мс модификатор убираем.</li></ul></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">54 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   2.2 Split — буквы и слова, fade — простое появление
+   ========================================================================== */
+.split__word {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.12em 0.02em;
+  margin: -0.12em -0.02em;
+  vertical-align: top;
+}
+
+.split__item {
+  display: inline-block;
+  transform: translateY(115%) rotate(6deg);
+  transform-origin: left bottom;
+  transition: transform 1.1s var(--ease-out);
+}
+
+.split--visible .split__item {
+  transform: none;
+}
+
+.split__item--bounce {
+  animation: bounce 0.7s var(--ease-out);
+}
+
+@keyframes bounce {
+  35% {
+    transform: translateY(-14%) rotate(-6deg);
+    color: var(--c-pink);
+  }
+}
+
+.fade {
+  opacity: 0;
+  scale: 0.6;
+  transition: opacity 1.4s var(--ease-out), scale 1.8s var(--ease-out);
+}
+
+.fade--visible {
+  opacity: 1;
+  scale: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split__item {
+    transform: none;
+  }
+
+  .fade {
+    opacity: 1;
+    scale: 1;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">3 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">splitText()
+showOnScroll()
+hoverLetters()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">76 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 2.2 Разбиваем текст на буквы и слова
+function splitText() {
+  let elements = document.querySelectorAll(&#x27;.split&#x27;)
+
+  elements.forEach((element) =&gt; {
+    let words = element.innerText.split(&#x27; &#x27;)
+    let html = &#x27;&#x27;
+    let index = 0
+    let delay = 0
+
+    if (element.classList.contains(&#x27;split--delay&#x27;)) {
+      delay = 300
+    }
+
+    words.forEach((word) =&gt; {
+      html += &#x27;&lt;span class=&quot;split__word&quot;&gt;&#x27;
+
+      if (element.classList.contains(&#x27;split--chars&#x27;)) {
+        for (let i = 0; i &lt; word.length; i++) {
+          html += `&lt;span class=&quot;split__item&quot; style=&quot;transition-delay: ${delay + index * 45}ms&quot;&gt;${word[i]}&lt;/span&gt;`
+          index++
+        }
+      } else {
+        html += `&lt;span class=&quot;split__item&quot; style=&quot;transition-delay: ${delay + index * 45}ms&quot;&gt;${word}&lt;/span&gt;`
+        index++
+      }
+
+      html += &#x27;&lt;/span&gt; &#x27;
+    })
+
+    element.innerHTML = html
+  })
+}
+
+// 2.2 Показываем элементы, когда они появляются на экране
+function showOnScroll() {
+  checkElements()
+  window.addEventListener(&#x27;scroll&#x27;, checkElements)
+}
+
+function checkElements() {
+  if (!document.body.classList.contains(&#x27;page--loading&#x27;)) {
+    let elements = document.querySelectorAll(&#x27;.split, .reveal, .fade&#x27;)
+
+    elements.forEach((element) =&gt; {
+      let rect = element.getBoundingClientRect()
+
+      if (rect.top &lt; window.innerHeight * 0.9) {
+        if (element.classList.contains(&#x27;split&#x27;)) {
+          element.classList.add(&#x27;split--visible&#x27;)
+        }
+        if (element.classList.contains(&#x27;reveal&#x27;)) {
+          element.classList.add(&#x27;reveal--visible&#x27;)
+        }
+        if (element.classList.contains(&#x27;fade&#x27;)) {
+          element.classList.add(&#x27;fade--visible&#x27;)
+        }
+      }
+    })
+  }
+}
+
+// 2.2 Буквы подпрыгивают при наведении
+function hoverLetters() {
+  let letters = document.querySelectorAll(&#x27;.split--hover .split__item&#x27;)
+
+  letters.forEach((letter) =&gt; {
+    letter.addEventListener(&#x27;mouseover&#x27;, () =&gt; {
+      letter.classList.add(&#x27;split__item--bounce&#x27;)
+
+      setTimeout(() =&gt; {
+        letter.classList.remove(&#x27;split__item--bounce&#x27;)
+      }, 700)
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-2-3">
+        <div class="sub__head"><span class="sub__num">2.3</span><h3>Низ экрана: текст, бейдж, подсказка</h3><label class="done"><input type="checkbox" data-sub="2-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Сетка из трёх колонок: текст, круглый бейдж, подсказка «листайте». На мобильном текст уходит на всю ширину, а бейдж и подсказка встают под ним.</li><li>Бейдж — текст по кругу: в SVG рисуем окружность-path и пускаем по ней textPath. Всё кольцо вращается анимацией spin.</li><li>Текст выезжает по словам (<code>split--words</code>) с задержкой (<code>split--delay</code>).</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Низ экрана: текст, бейдж, подсказка</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.3 Низ экрана: текст, бейдж, подсказка»</span><span class="chunk__meta">16 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;hero__bottom&quot;&gt;
+  &lt;p class=&quot;hero__text split split--words split--delay&quot;&gt;
+    Журнал о&amp;nbsp;цветах, букетах и&amp;nbsp;тех, кто их&amp;nbsp;выращивает. Мы&amp;nbsp;ещё поливаем
+    первые ростки&amp;nbsp;— скоро здесь всё расцветёт.
+  &lt;/p&gt;
+
+  &lt;a class=&quot;badge hero__badge&quot; href=&quot;#contact&quot;&gt;
+    &lt;!-- ↓ 2.3 SVG: кольцо с текстом по кругу --&gt;
+    &lt;span class=&quot;badge__center&quot;&gt;✿&lt;/span&gt;
+  &lt;/a&gt;
+
+  &lt;a class=&quot;scroll-hint hero__scroll&quot; href=&quot;#about&quot;&gt;
+    &lt;span class=&quot;scroll-hint__text&quot;&gt;листайте&lt;/span&gt;
+    &lt;span class=&quot;scroll-hint__line&quot;&gt;&lt;/span&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: кольцо с текстом по кругу</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.3 SVG: кольцо с текстом по кругу»</span><span class="chunk__meta">8 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;badge__ring&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;defs&gt;
+    &lt;path id=&quot;badge-circle&quot; d=&quot;M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0&quot;/&gt;
+  &lt;/defs&gt;
+  &lt;text class=&quot;badge__text&quot;&gt;
+    &lt;textPath href=&quot;#badge-circle&quot;&gt;скоро открытие ✿ скоро открытие ✿ скоро открытие ✿&lt;/textPath&gt;
+  &lt;/text&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">114 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   2.3 Первый экран: низ, бейдж, подсказка
+   ========================================================================== */
+.hero__bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.hero__text {
+  max-width: 460px;
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 500;
+}
+
+.badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(110px, 11vw, 160px);
+  aspect-ratio: 1;
+}
+
+.badge__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: spin 16s linear infinite;
+}
+
+.badge__text {
+  fill: currentColor;
+  font-family: var(--font-display);
+  font-size: 17.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.badge__center {
+  display: grid;
+  place-items: center;
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c-pink);
+  color: var(--c-green);
+  font-size: clamp(22px, 2.4vw, 34px);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.badge:hover .badge__center {
+  transform: scale(1.25) rotate(90deg);
+}
+
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scroll-hint__text {
+  writing-mode: vertical-rl;
+}
+
+.scroll-hint__line {
+  position: relative;
+  width: 1px;
+  height: 64px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.scroll-hint__line::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 100%;
+  height: 40%;
+  background: var(--ink);
+  animation: scroll-line 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes scroll-line {
+  from {
+    top: -40%;
+  }
+
+  to {
+    top: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__bottom {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .hero__text {
+    grid-column: 1 / -1;
+  }
+
+  .hero__scroll {
+    justify-self: end;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-2-4">
+        <div class="sub__head"><span class="sub__num">2.4</span><h3>Декор: пятно, цветы, параллакс</h3><label class="done"><input type="checkbox" data-sub="2-4"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Розовое пятно меняет форму с помощью SMIL-анимации &lt;animate&gt; прямо в SVG: браузер плавно перетекает между несколькими path. Главное правило морфинга — во всех формах одинаковое количество и порядок команд (здесь M + 4 кривых C).</li><li>Цветок — отдельный переиспользуемый блок flower: лепестки — эллипсы, повёрнутые вокруг центра. Модификатор <code>flower--lilac</code> перекрашивает лепестки.</li><li>Появление (fade) меняет свойства opacity и scale, а параллакс — свойство transform. Это разные свойства, поэтому они не мешают друг другу.</li><li><code>heroParallax()</code>: как в курсе — на mousemove считаем, насколько мышь ушла от центра экрана, и сдвигаем каждый элемент со своим коэффициентом. Отрицательный коэффициент — сдвиг в обратную сторону. Плавность даёт transition в CSS.</li><li><code>heroScroll()</code>: при скролле содержимое первого экрана уезжает медленнее страницы и растворяется.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Декор: пятно, цветы, параллакс</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.4 Декор: пятно, цветы, параллакс»</span><span class="chunk__meta">5 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;hero__decor&quot;&gt;
+  &lt;!-- ↓ 2.4 SVG: пятно, которое меняет форму --&gt;
+  &lt;!-- ↓ 2.4 SVG: большой цветок (8 лепестков) --&gt;
+  &lt;!-- ↓ 2.4 SVG: маленький сиреневый цветок (5 лепестков) --&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: пятно, которое меняет форму</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.4 SVG: пятно, которое меняет форму»</span><span class="chunk__meta">9 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;hero__blob fade&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;path d=&quot;M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z&quot;&gt;
+    &lt;animate attributeName=&quot;d&quot; dur=&quot;9s&quot; repeatCount=&quot;indefinite&quot;
+      values=&quot;M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z;
+              M110,15 C150,35 195,60 175,105 C160,150 140,190 95,175 C50,165 15,140 25,95 C35,50 70,5 110,15 Z;
+              M100,30 C160,10 190,70 170,110 C150,160 120,185 90,170 C40,160 10,130 30,90 C45,50 60,40 100,30 Z;
+              M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z&quot;/&gt;
+  &lt;/path&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: большой цветок (8 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.4 SVG: большой цветок (8 лепестков)»</span><span class="chunk__meta">13 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;flower hero__flower hero__flower--big fade&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g class=&quot;flower__petals&quot;&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(45 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(90 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(135 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(180 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(225 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(270 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(315 100 100)&quot;/&gt;
+  &lt;/g&gt;
+  &lt;circle class=&quot;flower__center&quot; cx=&quot;100&quot; cy=&quot;100&quot; r=&quot;20&quot;/&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: маленький сиреневый цветок (5 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 2.4 SVG: маленький сиреневый цветок (5 лепестков)»</span><span class="chunk__meta">10 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;flower flower--lilac hero__flower hero__flower--small fade&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g class=&quot;flower__petals&quot;&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(72 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(144 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(216 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(288 100 100)&quot;/&gt;
+  &lt;/g&gt;
+  &lt;circle class=&quot;flower__center&quot; cx=&quot;100&quot; cy=&quot;100&quot; r=&quot;18&quot;/&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">84 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   2.4 Цветок (переиспользуемый блок) и декор первого экрана
+   ========================================================================== */
+.flower__petals {
+  fill: var(--c-pink);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.flower__center {
+  fill: var(--c-butter);
+}
+
+.flower--lilac .flower__petals {
+  fill: var(--c-lilac);
+}
+
+.hero__decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero__blob {
+  position: absolute;
+  top: 6%;
+  right: -8%;
+  width: clamp(320px, 48vw, 760px);
+  fill: var(--c-pink-soft);
+  transition: opacity 1.4s var(--ease-out) 0.3s, scale 1.8s var(--ease-out) 0.3s, transform 0.8s var(--ease-out);
+}
+
+.hero__flower {
+  position: absolute;
+  transition: opacity 1.4s var(--ease-out) 0.6s, scale 1.8s var(--ease-out) 0.6s, transform 0.8s var(--ease-out);
+}
+
+.hero__flower .flower__petals {
+  animation: spin 24s linear infinite;
+}
+
+.hero__flower--big {
+  top: 16%;
+  right: 12%;
+  width: clamp(150px, 20vw, 320px);
+}
+
+.hero__flower--small {
+  top: 20%;
+  right: 46%;
+  width: clamp(70px, 8vw, 130px);
+}
+
+.hero__flower--small .flower__petals {
+  animation-direction: reverse;
+  animation-duration: 14s;
+}
+
+@media (max-width: 1024px) {
+  .hero__flower--small {
+    right: 52%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__blob {
+    top: 12%;
+    right: -30%;
+    width: 110vw;
+  }
+
+  .hero__flower--big {
+    top: 18%;
+    right: 8%;
+    width: 38vw;
+  }
+
+  .hero__flower--small {
+    top: 40%;
+    right: auto;
+    left: 10%;
+    width: 18vw;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">2 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">heroParallax()
+heroScroll()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">29 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 2.4 Параллакс цветов за мышью
+function heroParallax() {
+  let blob = document.querySelector(&#x27;.hero__blob&#x27;)
+  let bigFlower = document.querySelector(&#x27;.hero__flower--big&#x27;)
+  let smallFlower = document.querySelector(&#x27;.hero__flower--small&#x27;)
+
+  document.addEventListener(&#x27;mousemove&#x27;, (event) =&gt; {
+    let x = event.clientX - window.innerWidth / 2
+    let y = event.clientY - window.innerHeight / 2
+
+    blob.style.transform = `translate(${x * 0.04}px, ${y * 0.04}px)`
+    bigFlower.style.transform = `translate(${x * -0.06}px, ${y * -0.06}px)`
+    smallFlower.style.transform = `translate(${x * 0.09}px, ${y * 0.09}px)`
+  })
+}
+
+// 2.4 Первый экран уезжает медленнее скролла и растворяется
+function heroScroll() {
+  let inner = document.querySelector(&#x27;.hero__inner&#x27;)
+
+  window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+    let scroll = window.scrollY
+
+    if (scroll &lt; window.innerHeight) {
+      inner.style.transform = `translateY(${scroll * 0.25}px)`
+      inner.style.opacity = 1 - scroll / (window.innerHeight * 0.9)
+    }
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-3" data-step="3">
+      <div class="step__head"><span class="step__num">3</span><h2>Бегущая строка</h2></div>
+      <p class="step__notes">Две ленты под наклоном крутятся навстречу друг другу. Скорость, направление и перекос зависят от того, как быстро и куда мы листаем.</p>
+      <div class="sub" id="sub-3-1">
+        <div class="sub__head"><span class="sub__num">3.1</span><h3>Разметка и стили ленты</h3><label class="done"><input type="checkbox" data-sub="3-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>В каждой ленте две одинаковые копии текста (<code>marquee__track</code>) стоят друг за другом. Когда первая копия полностью уедет влево, на её месте ровно окажется вторая — и мы незаметно вернём обе в начало.</li><li>Нижняя лента едет в обратную сторону — у неё модификатор <code>marquee__row--reverse</code>, по нему JS и поймёт направление.</li><li>Наклон лент задан через rotate в CSS, а перекос при скролле JS будет задавать всей секции.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Разметка и стили ленты</span><span class="chunk__place">→ index.html — вместо комментария «↓ 3.1 Разметка и стили ленты»</span><span class="chunk__meta">30 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;section class=&quot;marquee&quot;&gt;
+  &lt;div class=&quot;marquee__row&quot;&gt;
+    &lt;div class=&quot;marquee__track&quot;&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;флористика&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;сезонные букеты&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;уход за растениями&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;язык цветов&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;marquee__track&quot;&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;флористика&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;сезонные букеты&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;уход за растениями&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;язык цветов&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;✿&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;marquee__row marquee__row--reverse&quot;&gt;
+    &lt;div class=&quot;marquee__track&quot;&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;свежие истории&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;садовые советы&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;скоро открытие&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;комнатные джунгли&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;marquee__track&quot;&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;свежие истории&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;садовые советы&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item&quot;&gt;скоро открытие&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+      &lt;span class=&quot;marquee__item marquee__item--accent&quot;&gt;комнатные джунгли&lt;/span&gt;&lt;span class=&quot;marquee__star&quot;&gt;❀&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">66 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   3. Бегущая строка
+   ========================================================================== */
+.marquee {
+  position: relative;
+  z-index: 2;
+  padding: clamp(24px, 4vw, 56px) 0;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.marquee__row {
+  display: flex;
+  width: 110%;
+  margin-left: -5%;
+  padding: clamp(10px, 1.4vw, 20px) 0;
+  background: var(--c-green);
+  color: var(--c-cream);
+  transform: rotate(-2.5deg);
+}
+
+.marquee__row--reverse {
+  position: relative;
+  z-index: -1;
+  margin-top: -12px;
+  background: var(--c-pink);
+  color: var(--c-green);
+  transform: rotate(1.8deg);
+}
+
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.marquee__item {
+  padding: 0 0.35em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(32px, 6vw, 96px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+}
+
+.marquee__item--accent {
+  color: var(--c-pink);
+  font-style: italic;
+}
+
+.marquee__row--reverse .marquee__item--accent {
+  color: var(--c-cream);
+}
+
+.marquee__star {
+  display: inline-block;
+  font-size: clamp(24px, 4vw, 64px);
+  color: var(--c-pink);
+  animation: spin 6s linear infinite;
+}
+
+.marquee__row--reverse .marquee__star {
+  color: var(--c-green);
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-3-2">
+        <div class="sub__head"><span class="sub__num">3.2</span><h3>Движение от скролла</h3><label class="done"><input type="checkbox" data-sub="3-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Положение ленты храним в процентах от ширины копии: от 0 до −100. Каждые 16 мс (≈60 раз в секунду) сдвигаем его через setInterval — как прогресс-бар в курсе. Вышли за −100 — прибавляем 100, и лента незаметно начинается заново.</li><li>Нижняя лента едет зеркально: её положение −100 минус положение верхней.</li><li>На скролле сравниваем новую прокрутку с прошлой: листаем вниз — ленты едут в одну сторону, вверх — в другую. Чем быстрее листаем, тем больше скорость и перекос секции.</li><li>Когда скролл остановился, возвращаем всё как было. Для этого каждый раз отменяем прошлый таймер (clearTimeout) и ставим новый на 150 мс — он сработает, только когда скролл затихнет.</li></ul></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">moveMarquee()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">56 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 3. Бегущая строка
+function moveMarquee() {
+  let marquee = document.querySelector(&#x27;.marquee&#x27;)
+  let rows = document.querySelectorAll(&#x27;.marquee__row&#x27;)
+  let position = 0
+  let direction = 1
+  let speed = 1
+  let lastScroll = window.scrollY
+  let timer
+
+  window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+    let delta = window.scrollY - lastScroll
+    lastScroll = window.scrollY
+
+    if (delta &gt; 0) {
+      direction = 1
+    } else if (delta &lt; 0) {
+      direction = -1
+    }
+
+    speed = 1 + Math.min(Math.abs(delta) / 10, 4)
+
+    let skew = Math.max(-8, Math.min(8, delta * 0.3))
+    marquee.style.transform = `skewX(${skew}deg)`
+
+    clearTimeout(timer)
+    timer = setTimeout(() =&gt; {
+      marquee.style.transform = &#x27;skewX(0deg)&#x27;
+      speed = 1
+    }, 150)
+  })
+
+  setInterval(() =&gt; {
+    position = position - 0.05 * speed * direction
+
+    if (position &lt; -100) {
+      position = position + 100
+    }
+    if (position &gt; 0) {
+      position = position - 100
+    }
+
+    rows.forEach((row) =&gt; {
+      let tracks = row.querySelectorAll(&#x27;.marquee__track&#x27;)
+      let x = position
+
+      if (row.classList.contains(&#x27;marquee__row--reverse&#x27;)) {
+        x = -100 - position
+      }
+
+      tracks.forEach((track) =&gt; {
+        track.style.transform = `translateX(${x}%)`
+      })
+    })
+  }, 16)
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-4" data-step="4">
+      <div class="step__head"><span class="step__num">4</span><h2>О проекте</h2></div>
+      <p class="step__notes">Общий каркас секций, большой текст, который подсвечивается по словам при скролле, и три карточки со счётчиками.</p>
+      <div class="sub" id="sub-4-1">
+        <div class="sub__head"><span class="sub__num">4.1</span><h3>Каркас секции и появление при скролле</h3><label class="done"><input type="checkbox" data-sub="4-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>section — общий блок для всех контентных секций: отступы и шапка секции с подписью (01) … и заметкой справа.</li><li>reveal — блок-утилита: элемент приподнят и прозрачен, а с модификатором <code>reveal--visible</code> встаёт на место. Модификатор ставит <code>checkElements()</code> из шага 2.2 — она уже проверяет все <code>.reveal</code>.</li><li>Через CSS-переменную --delay можно задать задержку конкретному элементу прямо в стилях.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас секции и появление при скролле</span><span class="chunk__place">→ index.html — вместо комментария «↓ 4.1 Каркас секции и появление при скролле»</span><span class="chunk__meta">9 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;section class=&quot;about section theme theme--light&quot; id=&quot;about&quot;&gt;
+  &lt;div class=&quot;section__head&quot;&gt;
+    &lt;p class=&quot;section__label reveal&quot;&gt;(01) О проекте&lt;/p&gt;
+    &lt;p class=&quot;section__note reveal&quot;&gt;что мы выращиваем&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- ↓ 4.2 Текст, который «проявляется» по словам --&gt;
+  &lt;!-- ↓ 4.3 Карточки со счётчиками --&gt;
+&lt;/section&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">49 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   4.1 Секция и появление при скролле
+   ========================================================================== */
+.section {
+  position: relative;
+  padding: clamp(96px, 14vw, 200px) var(--gutter);
+}
+
+.section__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 20px;
+  margin-bottom: clamp(40px, 6vw, 88px);
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section__note {
+  color: var(--muted);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 1s var(--ease-out), transform 1.2s var(--ease-out);
+  transition-delay: var(--delay, 0ms);
+}
+
+.reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 560px) {
+  .section__note {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-4-2">
+        <div class="sub__head"><span class="sub__num">4.2</span><h3>Текст, который «проявляется» по словам</h3><label class="done"><input type="checkbox" data-sub="4-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>JS оборачивает каждое слово в span.<code>about__word</code>. При скролле считаем прогресс абзаца по той же формуле, что <code>parallaxCircles()</code> в курсе: сколько абзаца уже прошло через экран, от 0 до 1. Подсвечиваем такую же долю слов.</li><li>Слова, в которых есть «цветоч», получают модификатор <code>about__word--accent</code> и красятся в розовый.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Текст, который «проявляется» по словам</span><span class="chunk__place">→ index.html — вместо комментария «↓ 4.2 Текст, который «проявляется» по словам»</span><span class="chunk__meta">6 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;p class=&quot;about__lead&quot;&gt;
+  «Цветочный»&amp;nbsp;— это учебный онлайн-журнал для всех, кто хоть раз замирал
+  у&amp;nbsp;витрины цветочной лавки. Мы&amp;nbsp;собираем понятные гайды по&amp;nbsp;уходу,
+  истории сортов, идеи сезонных букетов и&amp;nbsp;маленькие открытия, которые
+  делают дом живее.
+&lt;/p&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">24 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   4.2 О проекте: текст по словам
+   ========================================================================== */
+.about__lead {
+  max-width: 1400px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(26px, 4.2vw, 68px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.about__word {
+  opacity: 0.14;
+  transition: opacity 0.4s, color 0.4s;
+}
+
+.about__word--active {
+  opacity: 1;
+}
+
+.about__word--accent.about__word--active {
+  color: var(--c-pink);
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">highlightWords()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">33 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 4.2 Подсветка слов при скролле
+function highlightWords() {
+  let lead = document.querySelector(&#x27;.about__lead&#x27;)
+  let words = lead.innerText.split(&#x27; &#x27;)
+  let html = &#x27;&#x27;
+
+  words.forEach((word) =&gt; {
+    if (word.toLowerCase().includes(&#x27;цветоч&#x27;)) {
+      html += `&lt;span class=&quot;about__word about__word--accent&quot;&gt;${word}&lt;/span&gt; `
+    } else {
+      html += `&lt;span class=&quot;about__word&quot;&gt;${word}&lt;/span&gt; `
+    }
+  })
+
+  lead.innerHTML = html
+
+  let spans = document.querySelectorAll(&#x27;.about__word&#x27;)
+
+  window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+    let rect = lead.getBoundingClientRect()
+    let progress = (window.innerHeight * 0.85 - rect.top) / (rect.height + window.innerHeight * 0.3)
+    let p = Math.max(0, Math.min(1, progress))
+    let activeCount = Math.round(p * spans.length)
+
+    spans.forEach((span, index) =&gt; {
+      if (index &lt; activeCount) {
+        span.classList.add(&#x27;about__word--active&#x27;)
+      } else {
+        span.classList.remove(&#x27;about__word--active&#x27;)
+      }
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-4-3">
+        <div class="sub__head"><span class="sub__num">4.3</span><h3>Карточки со счётчиками</h3><label class="done"><input type="checkbox" data-sub="4-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Три карточки в сетке: на планшете две в ряд (третья на всю ширину), на телефоне одна колонка.</li><li>Задержку появления каждой карточки задаём через --delay в CSS.</li><li>Счётчик: итоговое число пишем прямо в разметке. JS запоминает его, ставит 0 и, когда число появилось на экране, «накручивает» его через setInterval — как прогресс-бар в курсе. Переменная started не даёт запустить счётчик второй раз.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Карточки со счётчиками</span><span class="chunk__place">→ index.html — вместо комментария «↓ 4.3 Карточки со счётчиками»</span><span class="chunk__meta">17 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;ul class=&quot;about__list&quot;&gt;
+  &lt;li class=&quot;about__item reveal&quot;&gt;
+    &lt;span class=&quot;about__number&quot;&gt;1&lt;/span&gt;
+    &lt;h2 class=&quot;about__title&quot;&gt;статья уже распустилась&lt;/h2&gt;
+    &lt;p class=&quot;about__text&quot;&gt;Первый материал можно прочитать прямо сейчас&amp;nbsp;— остальные набирают бутоны.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;about__item reveal&quot;&gt;
+    &lt;span class=&quot;about__number&quot;&gt;12&lt;/span&gt;
+    &lt;h2 class=&quot;about__title&quot;&gt;материалов в&amp;nbsp;работе&lt;/h2&gt;
+    &lt;p class=&quot;about__text&quot;&gt;Гайды, интервью с&amp;nbsp;флористами и&amp;nbsp;календарь цветения на&amp;nbsp;весь год.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;about__item reveal&quot;&gt;
+    &lt;span class=&quot;about__number&quot;&gt;365&lt;/span&gt;
+    &lt;h2 class=&quot;about__title&quot;&gt;дней в&amp;nbsp;цвету&lt;/h2&gt;
+    &lt;p class=&quot;about__text&quot;&gt;Рассказываем, что цветёт прямо сейчас&amp;nbsp;— в&amp;nbsp;любой сезон и&amp;nbsp;на&amp;nbsp;любом подоконнике.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">72 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   4.3 О проекте: карточки
+   ========================================================================== */
+.about__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 32px);
+  margin-top: clamp(64px, 10vw, 160px);
+}
+
+.about__item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: clamp(24px, 2.4vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: background-color 0.5s var(--ease-out), transform 0.6s var(--ease-out), opacity 1s var(--ease-out);
+}
+
+.about__item:nth-child(2) {
+  --delay: 120ms;
+}
+
+.about__item:nth-child(3) {
+  --delay: 240ms;
+}
+
+.about__item:hover {
+  background-color: var(--c-pink-soft);
+  transform: translateY(-8px) rotate(-1deg);
+}
+
+.about__number {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(56px, 7vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.about__title {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.about__text {
+  color: var(--muted);
+}
+
+@media (max-width: 1024px) {
+  .about__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about__item:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .about__list {
+    grid-template-columns: 1fr;
+  }
+
+  .about__item:last-child {
+    grid-column: auto;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">countNumbers()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">32 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 4.3 Счётчики
+function countNumbers() {
+  let numbers = document.querySelectorAll(&#x27;.about__number&#x27;)
+
+  numbers.forEach((number) =&gt; {
+    let target = parseInt(number.innerText)
+    let started = false
+    number.innerText = 0
+
+    window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+      let rect = number.getBoundingClientRect()
+
+      if (rect.top &lt; window.innerHeight * 0.8 &amp;&amp; !started) {
+        started = true
+
+        let current = 0
+        let step = Math.ceil(target / 60)
+
+        let interval = setInterval(() =&gt; {
+          current = current + step
+
+          if (current &gt;= target) {
+            current = target
+            clearInterval(interval)
+          }
+
+          number.innerText = current
+        }, 25)
+      }
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-5" data-step="5">
+      <div class="step__head"><span class="step__num">5</span><h2>Статьи</h2></div>
+      <p class="step__notes">Тёмная секция: заголовок, карточка единственной готовой статьи и список «coming soon», за курсором в котором летает пятно-превью.</p>
+      <div class="sub" id="sub-5-1">
+        <div class="sub__head"><span class="sub__num">5.1</span><h3>Каркас секции и смена темы страницы</h3><label class="done"><input type="checkbox" data-sub="5-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>У каждой секции есть класс theme и модификатор с цветом: <code>theme--light</code>, <code>theme--dark</code> или <code>theme--pink</code>. При скролле JS ищет секцию, которая пересекает середину экрана, и вешает на body модификатор <code>page--dark</code> или <code>page--pink</code> (стили для <code>page--pink</code> допишем на шаге 6).</li><li>Модификатор просто переопределяет переменные --bg, --ink, --muted, --line, поэтому все блоки перекрашиваются сами. Плавность даёт transition на <code>.page</code> из шага 0.</li><li>classList.remove можно передать сразу несколько классов через запятую.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас секции и смена темы страницы</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.1 Каркас секции и смена темы страницы»</span><span class="chunk__meta">12 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;section class=&quot;articles section theme theme--dark&quot; id=&quot;articles&quot;&gt;
+  &lt;div class=&quot;section__head&quot;&gt;
+    &lt;p class=&quot;section__label reveal&quot;&gt;(02) Статьи&lt;/p&gt;
+    &lt;p class=&quot;section__note reveal&quot;&gt;свежий номер&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;h2 class=&quot;articles__title split split--words&quot;&gt;Истории, которые распускаются&lt;/h2&gt;
+
+  &lt;!-- ↓ 5.2 Карточка статьи --&gt;
+  &lt;!-- ↓ 5.3 Список «Coming soon» --&gt;
+  &lt;!-- ↓ 5.4 Пятно-превью за курсором --&gt;
+&lt;/section&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">19 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   5.1 Статьи: каркас и тёмная тема
+   ========================================================================== */
+.page--dark {
+  --bg: var(--c-green);
+  --ink: var(--c-cream);
+  --muted: rgba(247, 241, 232, 0.62);
+  --line: rgba(247, 241, 232, 0.2);
+}
+
+.articles__title {
+  max-width: 1100px;
+  margin-bottom: clamp(48px, 7vw, 112px);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 120px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">changeTheme()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">23 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 5.1 Смена темы страницы по секциям
+function changeTheme() {
+  let sections = document.querySelectorAll(&#x27;.theme&#x27;)
+
+  window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+    let middle = window.innerHeight / 2
+
+    sections.forEach((section) =&gt; {
+      let rect = section.getBoundingClientRect()
+
+      if (rect.top &lt; middle &amp;&amp; rect.bottom &gt; middle) {
+        document.body.classList.remove(&#x27;page--dark&#x27;, &#x27;page--pink&#x27;)
+
+        if (section.classList.contains(&#x27;theme--dark&#x27;)) {
+          document.body.classList.add(&#x27;page--dark&#x27;)
+        }
+        if (section.classList.contains(&#x27;theme--pink&#x27;)) {
+          document.body.classList.add(&#x27;page--pink&#x27;)
+        }
+      }
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-5-2">
+        <div class="sub__head"><span class="sub__num">5.2</span><h3>Карточка статьи</h3><label class="done"><input type="checkbox" data-sub="5-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Две колонки: «картинка» и текст. Картинка нарисована без растровых изображений — градиенты плюс два SVG-цветка и стебель.</li><li>При наведении: картинка увеличивается, цветы поворачиваются, под заголовком прорисовывается линия (background-size от 0 до 100%), стрелка сдвигается.</li><li>3D-наклон: на mousemove считаем, где мышь внутри картинки (от −0.5 до 0.5 по каждой оси), и поворачиваем картинку через rotateX/rotateY. Когда мышь ушла — сбрасываем transform, картинка плавно возвращается благодаря transition.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Карточка статьи</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.2 Карточка статьи»</span><span class="chunk__meta">22 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;article class=&quot;card articles__card reveal&quot;&gt;
+  &lt;a class=&quot;card__link&quot; href=&quot;#&quot;&gt;
+    &lt;div class=&quot;card__media&quot;&gt;
+      &lt;div class=&quot;card__art&quot;&gt;
+        &lt;!-- ↓ 5.2 SVG: кремовый цветок в карточке (6 лепестков) --&gt;
+        &lt;!-- ↓ 5.2 SVG: сиреневый цветок в карточке (5 лепестков) --&gt;
+        &lt;span class=&quot;card__stem&quot;&gt;&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;span class=&quot;card__tag&quot;&gt;Уход&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;card__body&quot;&gt;
+      &lt;p class=&quot;card__meta&quot;&gt;&lt;time datetime=&quot;2026-09-28&quot;&gt;28 сентября 2026&lt;/time&gt; · 6 минут&lt;/p&gt;
+      &lt;h3 class=&quot;card__title&quot;&gt;Как продлить жизнь букету: 7&amp;nbsp;простых правил&lt;/h3&gt;
+      &lt;p class=&quot;card__excerpt&quot;&gt;
+        Подрезать стебли под водой, менять воду каждый день и&amp;nbsp;держать вазу подальше от&amp;nbsp;фруктов.
+        Разбираемся, почему это работает и&amp;nbsp;какие лайфхаки из&amp;nbsp;интернета лучше забыть.
+      &lt;/p&gt;
+      &lt;span class=&quot;card__more&quot;&gt;Читать статью &lt;span class=&quot;card__arrow&quot;&gt;→&lt;/span&gt;&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
+&lt;/article&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: кремовый цветок в карточке (6 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.2 SVG: кремовый цветок в карточке (6 лепестков)»</span><span class="chunk__meta">11 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;flower card__flower card__flower--one&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g class=&quot;flower__petals&quot;&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(60 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(120 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(180 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(240 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(300 100 100)&quot;/&gt;
+  &lt;/g&gt;
+  &lt;circle class=&quot;flower__center&quot; cx=&quot;100&quot; cy=&quot;100&quot; r=&quot;20&quot;/&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: сиреневый цветок в карточке (5 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.2 SVG: сиреневый цветок в карточке (5 лепестков)»</span><span class="chunk__meta">10 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;flower flower--lilac card__flower card__flower--two&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g class=&quot;flower__petals&quot;&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(72 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(144 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(216 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;26&quot; ry=&quot;46&quot; transform=&quot;rotate(288 100 100)&quot;/&gt;
+  &lt;/g&gt;
+  &lt;circle class=&quot;flower__center&quot; cx=&quot;100&quot; cy=&quot;100&quot; r=&quot;18&quot;/&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">143 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   5.2 Карточка статьи
+   ========================================================================== */
+.card__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 96px);
+}
+
+.card__media {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.card__art {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, var(--c-butter) 0 18%, transparent 40%),
+    radial-gradient(circle at 85% 90%, var(--c-lilac) 0 20%, transparent 50%),
+    linear-gradient(135deg, var(--c-pink-soft), var(--c-pink));
+  transition: transform 1.2s var(--ease-out);
+}
+
+.card__flower {
+  position: absolute;
+  transition: transform 1.2s var(--ease-out);
+}
+
+.card__flower--one {
+  top: 14%;
+  left: 18%;
+  width: 46%;
+}
+
+.card__flower--one .flower__petals {
+  fill: var(--c-cream);
+}
+
+.card__flower--two {
+  right: 10%;
+  bottom: 12%;
+  width: 30%;
+}
+
+.card__stem {
+  position: absolute;
+  left: 41%;
+  top: 60%;
+  width: 6px;
+  height: 60%;
+  border-radius: 6px;
+  background: var(--c-green);
+  transform: rotate(8deg);
+  transform-origin: top;
+}
+
+.card__tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--c-green);
+  color: var(--c-cream);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card__link:hover .card__art {
+  transform: scale(1.06);
+}
+
+.card__link:hover .card__flower--one {
+  transform: rotate(60deg) scale(1.12);
+}
+
+.card__link:hover .card__flower--two {
+  transform: rotate(-72deg) scale(1.2);
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card__meta {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(26px, 3vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  background: linear-gradient(currentColor, currentColor) left bottom / 0 3px no-repeat;
+  transition: background-size 0.8s var(--ease-out);
+}
+
+.card__link:hover .card__title {
+  background-size: 100% 3px;
+}
+
+.card__excerpt {
+  color: var(--muted);
+  font-size: clamp(16px, 1.2vw, 18px);
+}
+
+.card__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.card__arrow {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.card__link:hover .card__arrow {
+  transform: translateX(8px);
+}
+
+@media (max-width: 768px) {
+  .card__link {
+    grid-template-columns: 1fr;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">tiltCard()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">17 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 5.2 3D-наклон карточки за мышью
+function tiltCard() {
+  let link = document.querySelector(&#x27;.card__link&#x27;)
+  let media = document.querySelector(&#x27;.card__media&#x27;)
+
+  link.addEventListener(&#x27;mousemove&#x27;, (event) =&gt; {
+    let rect = media.getBoundingClientRect()
+    let x = (event.clientX - rect.left) / rect.width - 0.5
+    let y = (event.clientY - rect.top) / rect.height - 0.5
+
+    media.style.transform = `perspective(1000px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg)`
+  })
+
+  link.addEventListener(&#x27;mouseleave&#x27;, () =&gt; {
+    media.style.transform = &#x27;&#x27;
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-5-3">
+        <div class="sub__head"><span class="sub__num">5.3</span><h3>Список «Coming soon»</h3><label class="done"><input type="checkbox" data-sub="5-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Строки-сетки: номер, заголовок, статус. Заголовки размыты (filter: blur) — статьи ещё «не распустились». При наведении заголовок проявляется и сдвигается.</li><li>Точка в статусе пульсирует — это <code>::before</code> с анимацией pulse.</li><li>На тач-устройствах наведения нет, поэтому размытие делаем слабее через @media (hover: none).</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Список «Coming soon»</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.3 Список «Coming soon»»</span><span class="chunk__meta">22 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;ul class=&quot;soon articles__soon&quot;&gt;
+  &lt;li class=&quot;soon__item reveal&quot;&gt;
+    &lt;span class=&quot;soon__index&quot;&gt;02&lt;/span&gt;
+    &lt;h3 class=&quot;soon__title&quot;&gt;Календарь цветения: что сажать осенью&lt;/h3&gt;
+    &lt;span class=&quot;soon__status&quot;&gt;Coming soon&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;soon__item reveal&quot;&gt;
+    &lt;span class=&quot;soon__index&quot;&gt;03&lt;/span&gt;
+    &lt;h3 class=&quot;soon__title&quot;&gt;Язык цветов: что на&amp;nbsp;самом деле значит ваш букет&lt;/h3&gt;
+    &lt;span class=&quot;soon__status&quot;&gt;Coming soon&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;soon__item reveal&quot;&gt;
+    &lt;span class=&quot;soon__index&quot;&gt;04&lt;/span&gt;
+    &lt;h3 class=&quot;soon__title&quot;&gt;Интервью с&amp;nbsp;флористом: один день в&amp;nbsp;мастерской&lt;/h3&gt;
+    &lt;span class=&quot;soon__status&quot;&gt;Coming soon&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li class=&quot;soon__item reveal&quot;&gt;
+    &lt;span class=&quot;soon__index&quot;&gt;05&lt;/span&gt;
+    &lt;h3 class=&quot;soon__title&quot;&gt;Комнатные джунгли для тех, кто всё забывает&lt;/h3&gt;
+    &lt;span class=&quot;soon__status&quot;&gt;Coming soon&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">92 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   5.3 Список «Coming soon»
+   ========================================================================== */
+.articles__soon {
+  margin-top: clamp(64px, 9vw, 140px);
+}
+
+.soon__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(24px, 3vw, 44px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.soon__item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.soon__index {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.soon__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 2.6vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  opacity: 0.5;
+  filter: blur(1.5px);
+  transition: transform 0.6s var(--ease-out), opacity 0.4s, filter 0.4s;
+}
+
+.soon__item:hover .soon__title {
+  opacity: 1;
+  filter: none;
+  transform: translateX(16px);
+}
+
+.soon__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.soon__status::before {
+  content: &quot;&quot;;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-pink);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+    transform: scale(1.6);
+  }
+}
+
+@media (max-width: 768px) {
+  .soon__item {
+    grid-template-columns: 40px minmax(0, 1fr);
+    row-gap: 12px;
+  }
+
+  .soon__status {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (hover: none) {
+  .soon__title {
+    opacity: 0.7;
+    filter: blur(0.6px);
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-5-4">
+        <div class="sub__head"><span class="sub__num">5.4</span><h3>Пятно-превью за курсором</h3><label class="done"><input type="checkbox" data-sub="5-4"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Пятно зафиксировано (position: fixed) и на mousemove едет в точку курсора. transition на transform заставляет его немного отставать — получается мягкое движение.</li><li>Пока курсор не над строкой списка, пятно сжато в <code>scale(0)</code>. Над строкой — добавляем модификатор <code>preview--active</code>.</li><li>Цвет: у пятна есть модификаторы <code>preview--pink</code>, <code>preview--lilac</code>, <code>preview--lime</code>, <code>preview--peach</code>. Названия лежат в массиве colors в том же порядке, что строки списка, поэтому по номеру строки (index в forEach) берём нужный цвет.</li><li>preview.className перезаписывает сразу все классы элемента: так старый цвет не остаётся висеть.</li><li>mouseenter и mouseleave похожи на mouseover и mouseout, но не срабатывают повторно, когда мышь переходит между вложенными элементами строки.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Пятно-превью за курсором</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.4 Пятно-превью за курсором»</span><span class="chunk__meta">4 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;preview&quot;&gt;
+  &lt;!-- ↓ 5.4 SVG: пятно-превью --&gt;
+  &lt;span class=&quot;preview__emoji&quot;&gt;✿&lt;/span&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: пятно-превью</span><span class="chunk__place">→ index.html — вместо комментария «↓ 5.4 SVG: пятно-превью»</span><span class="chunk__meta">9 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;preview__blob&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;path class=&quot;preview__path&quot; d=&quot;M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z&quot;&gt;
+    &lt;animate attributeName=&quot;d&quot; dur=&quot;6s&quot; repeatCount=&quot;indefinite&quot;
+      values=&quot;M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z;
+              M100,30 C160,10 190,70 170,110 C150,160 120,185 90,170 C40,160 10,130 30,90 C45,50 60,40 100,30 Z;
+              M110,15 C150,35 195,60 175,105 C160,150 140,190 95,175 C50,165 15,140 25,95 C35,50 70,5 110,15 Z;
+              M100,20 C145,20 180,55 180,100 C180,145 145,180 100,180 C55,180 20,145 20,100 C20,55 55,20 100,20 Z&quot;/&gt;
+  &lt;/path&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">68 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   5.4 Пятно-превью
+   ========================================================================== */
+.preview {
+  --preview-color: var(--c-pink);
+  --preview-size: clamp(160px, 18vw, 260px);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  width: var(--preview-size);
+  aspect-ratio: 1;
+  margin: calc(var(--preview-size) / -2) 0 0 calc(var(--preview-size) / -2);
+  pointer-events: none;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.preview--lilac {
+  --preview-color: var(--c-lilac);
+}
+
+.preview--lime {
+  --preview-color: var(--c-lime);
+}
+
+.preview--peach {
+  --preview-color: var(--c-peach);
+}
+
+.preview__blob {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(0) rotate(-40deg);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.preview__path {
+  fill: var(--preview-color);
+  transition: fill 0.4s;
+}
+
+.preview__emoji {
+  position: relative;
+  font-size: clamp(56px, 6vw, 96px);
+  color: var(--c-green);
+  transform: scale(0);
+  transition: transform 0.6s var(--ease-out) 0.05s;
+}
+
+.preview--active .preview__blob {
+  transform: scale(1) rotate(0);
+}
+
+.preview--active .preview__emoji {
+  transform: scale(1);
+  animation: spin 8s linear infinite;
+}
+
+@media (hover: none) {
+  .preview {
+    display: none;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">showPreview()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">20 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 5.4 Пятно-превью за курсором
+function showPreview() {
+  let preview = document.querySelector(&#x27;.preview&#x27;)
+  let items = document.querySelectorAll(&#x27;.soon__item&#x27;)
+  let colors = [&#x27;pink&#x27;, &#x27;lilac&#x27;, &#x27;lime&#x27;, &#x27;peach&#x27;]
+
+  document.addEventListener(&#x27;mousemove&#x27;, (event) =&gt; {
+    preview.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`
+  })
+
+  items.forEach((item, index) =&gt; {
+    item.addEventListener(&#x27;mouseenter&#x27;, () =&gt; {
+      preview.className = `preview preview--active preview--${colors[index]}`
+    })
+
+    item.addEventListener(&#x27;mouseleave&#x27;, () =&gt; {
+      preview.classList.remove(&#x27;preview--active&#x27;)
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-6" data-step="6">
+      <div class="step__head"><span class="step__num">6</span><h2>Форма «Оставайтесь на связи»</h2></div>
+      <p class="step__notes">Розовая секция с формой Formspree: плавающие подписи полей и своя галочка согласия. Отправку делает сам браузер — JS для формы не нужен.</p>
+      <div class="sub" id="sub-6-1">
+        <div class="sub__head"><span class="sub__num">6.1</span><h3>Каркас секции и розовая тема</h3><label class="done"><input type="checkbox" data-sub="6-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Добавляем третью тему <code>page--pink</code>. Акцентный цвет в ней — зелёный, а заливка кнопки при наведении — кремовая, чтобы не слиться с фоном.</li><li>Две колонки: слева заголовок и текст, справа форма. На мобильном — одна колонка.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас секции и розовая тема</span><span class="chunk__place">→ index.html — вместо комментария «↓ 6.1 Каркас секции и розовая тема»</span><span class="chunk__meta">18 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;section class=&quot;contact section theme theme--pink&quot; id=&quot;contact&quot;&gt;
+  &lt;div class=&quot;section__head&quot;&gt;
+    &lt;p class=&quot;section__label reveal&quot;&gt;(03) На связи&lt;/p&gt;
+    &lt;p class=&quot;section__note reveal&quot;&gt;без спама, только цветы&lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;contact__grid&quot;&gt;
+    &lt;div class=&quot;contact__intro&quot;&gt;
+      &lt;h2 class=&quot;contact__title split split--words&quot;&gt;Оставайтесь на&amp;nbsp;связи&lt;/h2&gt;
+      &lt;p class=&quot;contact__text reveal&quot;&gt;
+        Напишите нам&amp;nbsp;— пришлём письмо, как только откроемся, и&amp;nbsp;поделимся первыми
+        статьями раньше всех. Идеи для материалов тоже очень ждём.
+      &lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;!-- ↓ 6.2 Поля с плавающими подписями --&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">46 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   6.1 Контакты: каркас и розовая тема
+   ========================================================================== */
+.page--pink {
+  --bg: var(--c-pink-soft);
+  --ink: var(--c-green);
+  --accent: var(--c-green);
+  --muted: rgba(30, 58, 43, 0.7);
+  --line: rgba(30, 58, 43, 0.28);
+}
+
+.page--pink .button::before {
+  background: var(--c-cream);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(48px, 7vw, 120px);
+}
+
+.contact__title {
+  margin-bottom: 32px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 4.8vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.contact__text {
+  --delay: 200ms;
+
+  max-width: 480px;
+  font-size: clamp(16px, 1.3vw, 20px);
+}
+
+@media (max-width: 768px) {
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contact__title {
+    font-size: 9.6vw;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-6-2">
+        <div class="sub__head"><span class="sub__num">6.2</span><h3>Поля с плавающими подписями</h3><label class="done"><input type="checkbox" data-sub="6-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Форма отправляется на Formspree самым простым способом: атрибуты action и method. Создайте форму на formspree.io и замените YOUR_FORM_ID в action. После отправки Formspree покажет свою страницу «Спасибо» со ссылкой назад.</li><li>Проверку делает браузер: required — поле обязательно, type=&quot;email&quot; — нужен email. Пока поле заполнено неправильно, форма не отправится, а браузер покажет подсказку.</li><li><code>:user-invalid</code> срабатывает, только когда человек уже потрогал поле и ввёл что-то не то — тогда линия под полем краснеет. Пустая форма при загрузке красной не будет.</li><li>Плавающая подпись: у инпута placeholder=&quot; &quot; (пробел). Пока поле пустое, placeholder «показан» — срабатывает <code>:placeholder-shown</code>. Когда поле в фокусе или заполнено, подпись уезжает вверх и уменьшается. Поэтому label стоит ПОСЛЕ input — чтобы работал селектор соседа +.</li><li>Линия под полем: <code>::after</code> у <code>form__field</code> растягивается <code>scaleX(0 → 1)</code> при <code>:focus-within</code>.</li><li>Скрытое поле _gotcha — ловушка для спам-ботов, _subject — тема письма в Formspree.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Поля с плавающими подписями</span><span class="chunk__place">→ index.html — вместо комментария «↓ 6.2 Поля с плавающими подписями»</span><span class="chunk__meta">21 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;form class=&quot;form contact__form reveal&quot; action=&quot;https://formspree.io/f/YOUR_FORM_ID&quot; method=&quot;POST&quot;&gt;
+  &lt;div class=&quot;form__field&quot;&gt;
+    &lt;input class=&quot;form__input&quot; type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; placeholder=&quot; &quot; autocomplete=&quot;name&quot; required&gt;
+    &lt;label class=&quot;form__label&quot; for=&quot;name&quot;&gt;Как вас зовут&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;form__field&quot;&gt;
+    &lt;input class=&quot;form__input&quot; type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; placeholder=&quot; &quot; autocomplete=&quot;email&quot; required&gt;
+    &lt;label class=&quot;form__label&quot; for=&quot;email&quot;&gt;Email&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;form__field&quot;&gt;
+    &lt;textarea class=&quot;form__input form__input--textarea&quot; id=&quot;message&quot; name=&quot;message&quot; placeholder=&quot; &quot; rows=&quot;3&quot;&gt;&lt;/textarea&gt;
+    &lt;label class=&quot;form__label&quot; for=&quot;message&quot;&gt;Любимый цветок или идея статьи&lt;/label&gt;
+  &lt;/div&gt;
+
+  &lt;input class=&quot;form__trap&quot; type=&quot;text&quot; name=&quot;_gotcha&quot; tabindex=&quot;-1&quot; autocomplete=&quot;off&quot;&gt;
+  &lt;input type=&quot;hidden&quot; name=&quot;_subject&quot; value=&quot;Цветочный: новая заявка&quot;&gt;
+
+  &lt;!-- ↓ 6.3 Согласие и кнопка отправки --&gt;
+&lt;/form&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">81 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   6.2 Форма: поля
+   ========================================================================== */
+.form {
+  --delay: 150ms;
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.form__field {
+  position: relative;
+  padding-top: 18px;
+}
+
+.form__field::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.form__field:focus-within::after {
+  transform: scaleX(1);
+}
+
+.form__input {
+  display: block;
+  width: 100%;
+  padding: 10px 0 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  outline: none;
+}
+
+.form__input--textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form__label {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  color: var(--muted);
+  font-size: clamp(18px, 1.6vw, 22px);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.4s var(--ease-out), color 0.3s;
+}
+
+.form__input:focus + .form__label,
+.form__input:not(:placeholder-shown) + .form__label {
+  color: var(--ink);
+  transform: translateY(-26px) scale(0.64);
+}
+
+.form__input:user-invalid {
+  border-bottom-color: #b3261e;
+}
+
+.form__field:has(.form__input:user-invalid)::after {
+  background: #b3261e;
+  transform: scaleX(1);
+}
+
+.form__trap {
+  position: absolute;
+  left: -9999px;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-6-3">
+        <div class="sub__head"><span class="sub__num">6.3</span><h3>Согласие и кнопка отправки</h3><label class="done"><input type="checkbox" data-sub="6-3"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Свою галочку рисуем так: настоящий checkbox делаем прозрачным, а рядом — span <code>form__checkmark</code>. Селектор <code>:checked</code> + <code>.form__checkmark</code> закрашивает квадрат и показывает ✓.</li><li>Кнопка — тот же блок button из шага 1.3, только без модификатора. На телефоне она растягивается на всю ширину.</li><li>Галочка тоже required: без согласия браузер не отправит форму.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Согласие и кнопка отправки</span><span class="chunk__place">→ index.html — вместо комментария «↓ 6.3 Согласие и кнопка отправки»</span><span class="chunk__meta">13 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;label class=&quot;form__check&quot;&gt;
+  &lt;input class=&quot;form__checkbox&quot; type=&quot;checkbox&quot; name=&quot;consent&quot; required&gt;
+  &lt;span class=&quot;form__checkmark&quot;&gt;&lt;/span&gt;
+  &lt;span class=&quot;form__check-text&quot;&gt;Согласен(на) на&amp;nbsp;обработку персональных данных&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;div class=&quot;form__footer&quot;&gt;
+  &lt;button class=&quot;button form__submit magnetic&quot; type=&quot;submit&quot;&gt;
+    &lt;span class=&quot;button__text&quot;&gt;Отправить&lt;/span&gt;
+    &lt;span class=&quot;button__icon&quot;&gt;✿&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;p class=&quot;form__note&quot;&gt;Нажимая кнопку, вы подписываетесь на новости «Цветочного»&lt;/p&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">76 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   6.3 Форма: согласие и отправка
+   ========================================================================== */
+.form__check {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.form__checkbox {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  opacity: 0;
+}
+
+.form__checkmark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.form__checkmark::after {
+  content: &quot;✓&quot;;
+  color: var(--c-cream);
+  font-size: 14px;
+  font-weight: 700;
+  transform: scale(0);
+  transition: transform 0.4s var(--ease-out);
+}
+
+.form__checkbox:checked + .form__checkmark {
+  background: var(--ink);
+}
+
+.form__checkbox:checked + .form__checkmark::after {
+  transform: scale(1);
+}
+
+.form__checkbox:focus-visible + .form__checkmark {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.form__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.form__note {
+  max-width: 260px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 560px) {
+  .form__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form__submit {
+    width: 100%;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-7" data-step="7">
+      <div class="step__head"><span class="step__num">7</span><h2>Подвал</h2></div>
+      <p class="step__notes">Верхняя часть подвала: короткий текст, ссылки по странице и круглая кнопка «наверх». Подвал тёмный — у него тоже есть классы theme <code>theme--dark</code>, поэтому страница перекрасится, когда мы до него доскроллим.</p>
+      <div class="sub" id="sub-7-1">
+        <div class="sub__head"><span class="sub__num">7.1</span><h3>Каркас подвала, ссылки и кнопка «наверх»</h3><label class="done"><input type="checkbox" data-sub="7-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Ссылки лежат прямо в nav, без списка — как в шапке.</li><li>Подчёркивание ссылок «убегает»: в покое линия сжата к правому краю (transform-origin: right), при наведении растёт от левого (transform-origin: left).</li><li>Кнопка «наверх» — магнитная (класс magnetic), оживим на шаге 9. По клику плавно прокручиваем страницу в начало: behavior: &#x27;smooth&#x27;.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Каркас подвала, ссылки и кнопка «наверх»</span><span class="chunk__place">→ index.html — вместо комментария «↓ 7.1 Каркас подвала, ссылки и кнопка «наверх»»</span><span class="chunk__meta">15 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;footer class=&quot;footer theme theme--dark&quot;&gt;
+  &lt;div class=&quot;footer__top&quot;&gt;
+    &lt;p class=&quot;footer__text&quot;&gt;Учебный проект о&amp;nbsp;цветах.&lt;br&gt;Скоро открытие&amp;nbsp;— не&amp;nbsp;пропустите.&lt;/p&gt;
+
+    &lt;nav class=&quot;footer__nav&quot;&gt;
+      &lt;a class=&quot;footer__link&quot; href=&quot;#about&quot;&gt;О проекте&lt;/a&gt;
+      &lt;a class=&quot;footer__link&quot; href=&quot;#articles&quot;&gt;Статьи&lt;/a&gt;
+      &lt;a class=&quot;footer__link&quot; href=&quot;#contact&quot;&gt;На связи&lt;/a&gt;
+    &lt;/nav&gt;
+
+    &lt;button class=&quot;footer__up magnetic&quot; type=&quot;button&quot;&gt;↑&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;!-- ↓ 8.1 Большой логотип и копирайт --&gt;
+&lt;/footer&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">77 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   7. Подвал: верхняя часть
+   ========================================================================== */
+.footer {
+  padding: clamp(64px, 8vw, 120px) var(--gutter) var(--gutter);
+  overflow: hidden;
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: start;
+  gap: clamp(24px, 5vw, 96px);
+}
+
+.footer__text {
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 500;
+}
+
+.footer__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.footer__link {
+  position: relative;
+  font-weight: 500;
+}
+
+.footer__link::after {
+  content: &quot;&quot;;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.footer__link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.footer__up {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background-color 0.4s, color 0.4s, transform 0.4s var(--ease-out);
+}
+
+.footer__up:hover {
+  background: var(--c-pink);
+  color: var(--c-green);
+}
+
+@media (max-width: 768px) {
+  .footer__top {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .footer__text {
+    grid-column: 1 / -1;
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">scrollUp()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">8 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 7. Кнопка «наверх»
+function scrollUp() {
+  let button = document.querySelector(&#x27;.footer__up&#x27;)
+
+  button.addEventListener(&#x27;click&#x27;, () =&gt; {
+    window.scrollTo({ top: 0, behavior: &#x27;smooth&#x27; })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-8" data-step="8">
+      <div class="step__head"><span class="step__num">8</span><h2>Футер</h2></div>
+      <p class="step__notes">Нижняя часть подвала: огромное слово «цветочный» на всю ширину и строка с копирайтом.</p>
+      <div class="sub" id="sub-8-1">
+        <div class="sub__head"><span class="sub__num">8.1</span><h3>Большой логотип и копирайт</h3><label class="done"><input type="checkbox" data-sub="8-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Слово разбивается на буквы тем же split из шага 2.2 и выезжает, когда доскроллили до низа. Буквы подпрыгивают при наведении (<code>split--hover</code>).</li><li>Размер 13.2vw подобран так, чтобы 9 букв Unbounded заняли ширину экрана. white-space: nowrap не даёт слову переноситься.</li><li>Год в копирайте JS подставляет сам: new <code>Date()</code> — текущая дата, <code>getFullYear()</code> — год из неё.</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Большой логотип и копирайт</span><span class="chunk__place">→ index.html — вместо комментария «↓ 8.1 Большой логотип и копирайт»</span><span class="chunk__meta">6 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;p class=&quot;footer__wordmark split split--chars split--hover&quot;&gt;цветочный&lt;/p&gt;
+
+&lt;div class=&quot;footer__bottom&quot;&gt;
+  &lt;span&gt;© &lt;span class=&quot;footer__year&quot;&gt;2026&lt;/span&gt; Цветочный&lt;/span&gt;
+  &lt;span&gt;Сделано с&amp;nbsp;любовью к&amp;nbsp;цветам&lt;/span&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">24 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   8. Футер: большой логотип и копирайт
+   ========================================================================== */
+.footer__wordmark {
+  margin: clamp(48px, 8vw, 120px) 0 clamp(16px, 2vw, 32px);
+  color: var(--c-pink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 13.2vw, 260px);
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">setYear()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">5 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 8. Текущий год в копирайте
+function setYear() {
+  let year = document.querySelector(&#x27;.footer__year&#x27;)
+  year.innerText = new Date().getFullYear()
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-9" data-step="9">
+      <div class="step__head"><span class="step__num">9</span><h2>Курсор</h2></div>
+      <p class="step__notes">Свой курсор вместо системного: белый кружок в режиме смешивания difference (инвертирует всё, что под ним), увеличивается над ссылками и превращается в розовый круг с подписью над карточкой, бейджем и строками «скоро». Плюс магнитные кнопки.</p>
+      <div class="sub" id="sub-9-1">
+        <div class="sub__head"><span class="sub__num">9.1</span><h3>Курсор с подписями</h3><label class="done"><input type="checkbox" data-sub="9-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Курсор показываем только там, где есть мышь: медиазапрос (hover: hover) and (pointer: fine). На телефонах и планшетах он не появится, и системный курсор останется.</li><li>Как <code>setCursor()</code> в курсе: на mousemove двигаем курсор в точку мыши. Небольшое отставание даёт transition на transform.</li><li>Над ссылками и кнопками (mouseover) добавляем <code>cursor--hover</code>, при уходе (mouseout) убираем.</li><li>Подписи вешаем внутренней функцией <code>addCursorLabel(selector, text)</code>: она находит элементы по селектору и на наведение пишет в курсор нужный текст. Одна функция — три вызова: карточка «Читать», бейдж «Скоро!», строки списка «Скоро».</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Курсор с подписями</span><span class="chunk__place">→ index.html — вместо комментария «↓ 9.1 Курсор с подписями»</span><span class="chunk__meta">4 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;cursor&quot;&gt;
+  &lt;span class=&quot;cursor__circle&quot;&gt;&lt;/span&gt;
+  &lt;span class=&quot;cursor__label&quot;&gt;&lt;/span&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">70 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   9.1 Курсор
+   ========================================================================== */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  display: none;
+  pointer-events: none;
+  transition: transform 0.12s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor {
+    display: block;
+  }
+
+  .page,
+  .page a,
+  .page button,
+  .page label {
+    cursor: none;
+  }
+}
+
+.cursor__circle {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  transition: transform 0.45s var(--ease-out), background-color 0.3s, opacity 0.3s;
+}
+
+.cursor__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--c-green);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition: transform 0.45s var(--ease-out), opacity 0.3s;
+}
+
+.cursor--hover .cursor__circle {
+  transform: scale(3);
+}
+
+.cursor--label .cursor__circle {
+  background: var(--c-pink);
+  mix-blend-mode: normal;
+  transform: scale(6);
+}
+
+.cursor--label .cursor__label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cursor--hidden .cursor__circle {
+  opacity: 0;
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">moveCursor()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">37 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 9.1 Курсор с подписями
+function moveCursor() {
+  let cursor = document.querySelector(&#x27;.cursor&#x27;)
+  let label = document.querySelector(&#x27;.cursor__label&#x27;)
+  let links = document.querySelectorAll(&#x27;a, button, label&#x27;)
+
+  document.addEventListener(&#x27;mousemove&#x27;, (event) =&gt; {
+    cursor.style.transform = `translate(${event.clientX}px, ${event.clientY}px)`
+  })
+
+  links.forEach((link) =&gt; {
+    link.addEventListener(&#x27;mouseover&#x27;, () =&gt; {
+      cursor.classList.add(&#x27;cursor--hover&#x27;)
+    })
+    link.addEventListener(&#x27;mouseout&#x27;, () =&gt; {
+      cursor.classList.remove(&#x27;cursor--hover&#x27;)
+    })
+  })
+
+  addCursorLabel(&#x27;.card__link&#x27;, &#x27;Читать&#x27;)
+  addCursorLabel(&#x27;.badge&#x27;, &#x27;Скоро!&#x27;)
+  addCursorLabel(&#x27;.soon__item&#x27;, &#x27;Скоро&#x27;)
+
+  function addCursorLabel(selector, text) {
+    let elements = document.querySelectorAll(selector)
+
+    elements.forEach((element) =&gt; {
+      element.addEventListener(&#x27;mouseover&#x27;, () =&gt; {
+        label.innerText = text
+        cursor.classList.add(&#x27;cursor--label&#x27;)
+      })
+      element.addEventListener(&#x27;mouseout&#x27;, () =&gt; {
+        cursor.classList.remove(&#x27;cursor--label&#x27;)
+      })
+    })
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+      <div class="sub" id="sub-9-2">
+        <div class="sub__head"><span class="sub__num">9.2</span><h3>Магнитные кнопки</h3><label class="done"><input type="checkbox" data-sub="9-2"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>Все элементы с классом magnetic сдвигаются в сторону курсора на 30–40% расстояния от своего центра. Когда мышь уходит, inline-стиль сбрасывается, и элемент плавно возвращается благодаря transition.</li></ul></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">magneticButtons()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">18 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 9.2 Магнитные кнопки
+function magneticButtons() {
+  let buttons = document.querySelectorAll(&#x27;.magnetic&#x27;)
+
+  buttons.forEach((button) =&gt; {
+    button.addEventListener(&#x27;mousemove&#x27;, (event) =&gt; {
+      let rect = button.getBoundingClientRect()
+      let x = event.clientX - (rect.left + rect.width / 2)
+      let y = event.clientY - (rect.top + rect.height / 2)
+
+      button.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px)`
+    })
+
+    button.addEventListener(&#x27;mouseleave&#x27;, () =&gt; {
+      button.style.transform = &#x27;&#x27;
+    })
+  })
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="step" id="step-10" data-step="10">
+      <div class="step__head"><span class="step__num">10</span><h2>Прелоадер</h2></div>
+      <p class="step__notes">Зелёный экран с «распускающимся» цветком и счётчиком до 100%. Затем он уезжает вверх как шторка, и только после этого запускаются анимации первого экрана.</p>
+      <div class="sub" id="sub-10-1">
+        <div class="sub__head"><span class="sub__num">10.1</span><h3>Прелоадер</h3><label class="done"><input type="checkbox" data-sub="10-1"> пройдено</label></div>
+        <div class="say"><p class="say__title">Что проговорить</p><ul><li>К body добавляем модификатор <code>page--loading</code> — он запрещает прокрутку, пока идёт загрузка.</li><li>Шторка: clip-path: <code>inset(0 0 0 0)</code> → <code>inset(0 0 100% 0)</code> — видимая область схлопывается снизу вверх.</li><li>Счётчик — тот же прогресс-бар из курса: setInterval каждые 18 мс прибавляет 1, пока не дойдёт до 100 (около 1.8 секунды).</li><li>На 100 останавливаем интервал, опускаем шторку, снимаем <code>page--loading</code> и вызываем <code>checkElements()</code> из шага 2.2. Раньше она ничего не показывала, потому что на body висел <code>page--loading</code> — теперь заголовок начнёт выезжать сразу после шторки.</li><li>Через 1.2 секунды, когда шторка уехала, прячем прелоадер совсем (<code>loader--hidden</code>).</li></ul></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--patch">HTML</span><span class="chunk__title">Правка разметки</span><span class="chunk__place">→ index.html — замените открывающий тег</span><span class="chunk__meta">5 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;!-- было --&gt;
+&lt;body class=&quot;page&quot;&gt;
+
+&lt;!-- стало --&gt;
+&lt;body class=&quot;page page--loading&quot;&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--html"><div class="chunk__bar"><span class="pill pill--html">HTML</span><span class="chunk__title">Прелоадер</span><span class="chunk__place">→ index.html — вместо комментария «↓ 10.1 Прелоадер»</span><span class="chunk__meta">7 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;div class=&quot;loader&quot;&gt;
+  &lt;div class=&quot;loader__flower&quot;&gt;
+    &lt;!-- ↓ 10.1 SVG: вращающийся цветок прелоадера (8 лепестков) --&gt;
+  &lt;/div&gt;
+  &lt;p class=&quot;loader__counter&quot;&gt;&lt;span class=&quot;loader__value&quot;&gt;0&lt;/span&gt;%&lt;/p&gt;
+  &lt;p class=&quot;loader__caption&quot;&gt;распускаемся…&lt;/p&gt;
+&lt;/div&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--svg"><div class="chunk__bar"><span class="pill pill--svg">SVG</span><span class="chunk__title">SVG: вращающийся цветок прелоадера (8 лепестков)</span><span class="chunk__place">→ index.html — вместо комментария «↓ 10.1 SVG: вращающийся цветок прелоадера (8 лепестков)»</span><span class="chunk__meta">13 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-xml">&lt;svg class=&quot;flower flower--spin&quot; viewBox=&quot;0 0 200 200&quot;&gt;
+  &lt;g class=&quot;flower__petals&quot;&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(45 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(90 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(135 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(180 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(225 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(270 100 100)&quot;/&gt;
+    &lt;ellipse cx=&quot;100&quot; cy=&quot;52&quot; rx=&quot;22&quot; ry=&quot;46&quot; transform=&quot;rotate(315 100 100)&quot;/&gt;
+  &lt;/g&gt;
+  &lt;circle class=&quot;flower__center&quot; cx=&quot;100&quot; cy=&quot;100&quot; r=&quot;20&quot;/&gt;
+&lt;/svg&gt;</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--css"><div class="chunk__bar"><span class="pill pill--css">CSS</span><span class="chunk__title">Стили</span><span class="chunk__place">→ css/style.css — в конец файла</span><span class="chunk__meta">67 строк</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-css">/* ==========================================================================
+   10. Прелоадер
+   ========================================================================== */
+.page--loading {
+  overflow: hidden;
+}
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: var(--c-green);
+  color: var(--c-cream);
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1.1s var(--ease-in-out);
+}
+
+.loader--done {
+  clip-path: inset(0 0 100% 0);
+}
+
+.loader--hidden {
+  display: none;
+}
+
+.loader__flower {
+  width: clamp(90px, 14vw, 160px);
+  animation: bloom 1.6s var(--ease-out) both;
+}
+
+.flower--spin .flower__petals {
+  animation: spin 6s linear infinite;
+}
+
+.loader__counter {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(64px, 16vw, 220px);
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+.loader__caption {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--gutter);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+@keyframes bloom {
+  from {
+    transform: scale(0) rotate(-120deg);
+  }
+
+  to {
+    transform: scale(1) rotate(0);
+  }
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--jscall">JS</span><span class="chunk__title">Вызов функции</span><span class="chunk__place">→ js/main.js — в конец списка вызовов, в начале файла</span><span class="chunk__meta">1 строка</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">loadPage()</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+        <div class="chunk chunk--js"><div class="chunk__bar"><span class="pill pill--js">JS</span><span class="chunk__title">Функция</span><span class="chunk__place">→ js/main.js — в конец файла</span><span class="chunk__meta">23 строки</span><button class="copy" type="button">Копировать</button></div><pre><code class="language-javascript">// 10. Прелоадер
+function loadPage() {
+  let loader = document.querySelector(&#x27;.loader&#x27;)
+  let value = document.querySelector(&#x27;.loader__value&#x27;)
+  let percent = 0
+
+  let interval = setInterval(() =&gt; {
+    percent++
+    value.innerText = percent
+
+    if (percent == 100) {
+      clearInterval(interval)
+
+      loader.classList.add(&#x27;loader--done&#x27;)
+      document.body.classList.remove(&#x27;page--loading&#x27;)
+      checkElements()
+
+      setTimeout(() =&gt; {
+        loader.classList.add(&#x27;loader--hidden&#x27;)
+      }, 1200)
+    }
+  }, 18)
+}</code></pre><button class="chunk__more" type="button">Показать целиком</button></div>
+      </div>
+    </section>
+
+    <section class="final">
+      <h2>Проверка в конце пары</h2>
+      <p>
+        Итоговая страница из этих кусков лежит в архиве в папке <code>tsvetochny</code>. Если у студента что-то не работает,
+        сравните его файлы с ней. Чаще всего забывают про порядок: CSS и JS кусков должны идти в том же порядке, что и шаги.
+      </p>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  // Подсветка синтаксиса, если библиотека загрузилась (без интернета код просто остаётся без цвета)
+  if (window.hljs) {
+    document.querySelectorAll('pre code').forEach((el) => window.hljs.highlightElement(el));
+  }
+
+  // Копирование кода
+  document.querySelectorAll('.copy').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const code = button.closest('.chunk').querySelector('code');
+      try {
+        await navigator.clipboard.writeText(code.textContent);
+        button.textContent = 'Скопировано';
+      } catch {
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        button.textContent = 'Выделено — Ctrl+C';
+      }
+      button.classList.add('copy--ok');
+      setTimeout(() => {
+        button.textContent = 'Копировать';
+        button.classList.remove('copy--ok');
+      }, 1600);
+    });
+  });
+
+  // Раскрыть длинный кусок
+  document.querySelectorAll('.chunk__more').forEach((button) => {
+    button.addEventListener('click', () => button.closest('.chunk').classList.add('chunk--open'));
+  });
+  document.querySelectorAll('.chunk pre').forEach((pre) => {
+    if (pre.scrollHeight <= pre.clientHeight + 4) pre.closest('.chunk').classList.add('chunk--open');
+  });
+
+  // Фильтры по типу куска
+  const store = {
+    get(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } },
+    set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} },
+  };
+
+  const hidden = store.get('cheatsheet-hidden') || [];
+  document.querySelectorAll('[data-filter]').forEach((chip) => {
+    const type = chip.dataset.filter;
+    const apply = (isHidden) => {
+      document.body.classList.toggle(`hide-${type}`, isHidden);
+      chip.setAttribute('aria-pressed', String(!isHidden));
+    };
+    apply(hidden.includes(type));
+    chip.addEventListener('click', () => {
+      const isHidden = chip.getAttribute('aria-pressed') === 'true';
+      apply(isHidden);
+      const list = [...document.querySelectorAll('[data-filter][aria-pressed="false"]')].map((c) => c.dataset.filter);
+      store.set('cheatsheet-hidden', list);
+    });
+  });
+
+  // Отметки «пройдено»
+  const done = store.get('cheatsheet-done') || {};
+  document.querySelectorAll('.done input').forEach((box) => {
+    const id = box.dataset.sub;
+    const link = document.querySelector(`.toc__subs a[href="#sub-${id}"]`);
+    const apply = () => link && link.classList.toggle('is-done', box.checked);
+    box.checked = Boolean(done[id]);
+    apply();
+    box.addEventListener('change', () => {
+      done[id] = box.checked;
+      store.set('cheatsheet-done', done);
+      apply();
+    });
+  });
+
+  // Подсветка текущего шага в навигации
+  const tocItems = new Map([...document.querySelectorAll('.toc__step')].map((li) => [li.dataset.step, li]));
+  const stepObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      tocItems.forEach((li) => li.classList.remove('toc__step--active'));
+      const li = tocItems.get(entry.target.dataset.step);
+      if (!li) return;
+      li.classList.add('toc__step--active');
+      const toc = document.querySelector('.toc');
+      if (toc.scrollWidth > toc.clientWidth) {
+        toc.scrollTo({ left: li.offsetLeft - 16, behavior: 'smooth' });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('.step').forEach((step) => stepObserver.observe(step));
+</script>
+</body>
+</html>
